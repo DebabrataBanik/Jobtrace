@@ -1,4 +1,5 @@
 import express from 'express'
+import { connectDB } from './config/db.js'
 import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
@@ -13,6 +14,8 @@ app.use(cors())
 
 app.use(express.json())
 
+await connectDB()
+
 app.get('/', (req, res) => {
   res.json({ message: 'Server running'})
 })
@@ -23,4 +26,4 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 3000
 
-app.listen(PORT, () => console.log(`Server running at ${PORT}`))
+app.listen(PORT, () => console.log(`Server running at PORT ${PORT}`))
