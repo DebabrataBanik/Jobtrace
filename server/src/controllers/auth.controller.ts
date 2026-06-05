@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { registerUser } from "../services/auth.service.js"
+import { loginUser, registerUser } from "../services/auth.service.js"
 
 export async function register(req: Request, res: Response){
   const result = await registerUser(req.body)
@@ -10,5 +10,9 @@ export async function register(req: Request, res: Response){
 }
 
 export async function login(req: Request, res: Response){
-  res.json({ message: 'Login isnt setup yet!'})
+  const result = await loginUser(req.body)
+  res.json({
+    status: 'success',
+    ...result
+  })
 }
