@@ -7,6 +7,8 @@ import morgan from 'morgan'
 import 'dotenv/config'
 import { authRouter } from './routes/auth.router.js'
 import { errors } from 'jose'
+import { applicationRouter } from './routes/application.router.js'
+import { authenticate } from './middlewares/auth.middleware.js'
 
 const app = express()
 
@@ -20,6 +22,7 @@ app.use(express.json())
 await connectDB()
 
 app.use('/auth', authRouter)
+app.use('/applications', authenticate, applicationRouter)
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Invalid Route'})
