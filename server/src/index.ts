@@ -6,6 +6,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import 'dotenv/config'
 import { authRouter } from './routes/auth.router.js'
+import { errors } from 'jose'
 
 const app = express()
 
@@ -24,9 +25,13 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Invalid Route'})
 })
 
-app.use((err: ApiError , req: Request, res: Response, next: NextFunction) => {
-  const status = err.statusCode || 500
-  const message = err.isOperational ? err.message : 'Internal server error'
+app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+  if(err instanceof errors.JOSEError){
+    return res.status(401).json({ message: 'Invalid or token expired' })
+  }
+  const apiErr = err as ApiError
+  const status = apiErr.statusCode || 500
+  const message = apiErr.isOperational ? apiErr.message : 'Internal server error'
   if(status === 500) console.error(err)
   res.status(status).json({ message })
 })
