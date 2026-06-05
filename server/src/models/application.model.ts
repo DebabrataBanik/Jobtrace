@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const ApplicationSchema = new mongoose.Schema({
   company: { type: String, required: true},
   title: { type: String, required: true},
-  status: { type: String, enum: ['Applied', 'OA', 'Interview', 'Offer', 'Rejected'], default: 'Applied' },
+  status: { type: String, enum: ['Applied', 'OA', 'Interview', 'Offer', 'Rejected'], required: true},
   appliedDate: { type: Date, required: true},
   url: String,
   description: String,
