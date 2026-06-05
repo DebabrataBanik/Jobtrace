@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { z } from 'zod' 
 import { jwtVerify } from 'jose'
 
-export function validateAuthRequest(schema: z.ZodType){
+export function validateRequest(schema: z.ZodType){
   return async (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.body)
     if(!result.success){
