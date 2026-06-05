@@ -1,7 +1,6 @@
 import { User } from "../models/user.model.js";
-import { LoginInput, RegisterInput } from "../schema/user.schema.js";
+import { LoginInput, RegisterInput } from "../schema/auth.schema.js";
 import ApiError from "../utils/ApiError.js";
-import { SignJWT } from "jose";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 
