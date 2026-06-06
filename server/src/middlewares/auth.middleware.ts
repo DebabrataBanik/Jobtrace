@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { z } from 'zod' 
 import { jwtVerify } from 'jose'
+import mongoose from 'mongoose'
 
 export function validateRequest(schema: z.ZodType){
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -30,5 +31,13 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
   const { payload } = await jwtVerify(token, secret)
   req.user = { userId: payload.sub as string }
 
+  next()
+}
+
+export function validateId(req: Request, res: Response, next: NextFunction){
+  const {id} = req.params
+  if (!mongoose.Types.ObjectId.isValid(id as string)) {
+    return res.status(400).json({ message: 'Invalid ID format' })
+  }
   next()
 }
