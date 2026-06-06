@@ -1,6 +1,10 @@
 import { Application } from "../models/application.model.js"
 import { ApplicationInput } from "../schema/application.schema.js"
 
+export function getApplications(userId: string){
+  return Application.find({ userId })
+}
+
 export function createApplication(data: ApplicationInput, userId: string){
   const { company, title, status, appliedDate, url, description, notes } = data
   return Application.create({
