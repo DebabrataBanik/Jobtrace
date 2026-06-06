@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createApplication, getApplications, getApplication } from "../services/application.service.js";
+import { createApplication, getApplications, getApplication, deleteApplication } from "../services/application.service.js";
 
 export async function getAll(req: Request, res: Response){
   const userId = req.user!.userId
@@ -18,4 +18,11 @@ export async function getOne(req: Request, res: Response){
   const { id } = req.params
   const application = await getApplication(id as string, userId)
   res.json(application)
+}
+
+export async function deleteOne(req: Request, res: Response){
+  const userId = req.user!.userId
+  const { id } = req.params
+  await deleteApplication(id as string, userId)
+  res.status(204).send()
 }

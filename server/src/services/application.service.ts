@@ -28,3 +28,10 @@ export async function getApplication(id: string, userId: string){
   }
   return document
 }
+
+export async function deleteApplication(id: string, userId: string){
+  const result = await Application.deleteOne({ _id: id, userId })
+  if(result.deletedCount === 0){
+    throw new ApiError(404, 'Application not found')
+  } 
+}
