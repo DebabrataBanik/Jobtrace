@@ -1,4 +1,5 @@
 import { rateLimit } from 'express-rate-limit'
+import { slowDown } from 'express-slow-down'
 
 export const authLimiter = rateLimit({
   windowMs: 10*60*1000,
@@ -14,4 +15,10 @@ export const applicationLimiter = rateLimit({
   message: { message: 'Will you go slower boy' }, 
   legacyHeaders: false,
   standardHeaders: true
+})
+
+export const applicationThrottle = slowDown({
+  windowMs: 5*60*1000,
+  delayAfter: 50,
+  delayMs: (hits) => hits * 100
 })

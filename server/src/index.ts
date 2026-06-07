@@ -9,6 +9,7 @@ import { authRouter } from './routes/auth.router.js'
 import { errors } from 'jose'
 import { applicationRouter } from './routes/application.router.js'
 import { authenticate } from './middlewares/auth.middleware.js'
+import { applicationLimiter, applicationThrottle } from './middlewares/rateLimiter.js'
 import mongoose from 'mongoose'
 
 const app = express()
@@ -25,7 +26,7 @@ app.use(express.json({ limit: '20kb' }))
 await connectDB()
 
 app.use('/auth', authRouter)
-app.use('/applications', authenticate, applicationRouter)
+app.use('/applications', authenticate, applicationThrottle, applicationLimiter, applicationRouter)
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Invalid Route'})
