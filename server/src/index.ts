@@ -9,15 +9,18 @@ import { authRouter } from './routes/auth.router.js'
 import { errors } from 'jose'
 import { applicationRouter } from './routes/application.router.js'
 import { authenticate } from './middlewares/auth.middleware.js'
+import mongoose from 'mongoose'
 
 const app = express()
+
+mongoose.set('sanitizeFilter', true)
 
 app.use(helmet())
 app.use(morgan('dev'))
 
 app.use(cors())
 
-app.use(express.json())
+app.use(express.json({ limit: '20kb' }))
 
 await connectDB()
 
