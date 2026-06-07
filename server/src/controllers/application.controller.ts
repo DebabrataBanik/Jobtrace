@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createApplication, getApplications, getApplication, deleteApplication } from "../services/application.service.js";
+import { createApplication, getApplications, getApplication, deleteApplication, updateApplication } from "../services/application.service.js";
 
 export async function getAll(req: Request, res: Response){
   const userId = req.user!.userId
@@ -17,6 +17,14 @@ export async function getOne(req: Request, res: Response){
   const userId = req.user!.userId
   const { id } = req.params
   const application = await getApplication(id as string, userId)
+  res.json(application)
+}
+
+export async function updateOne(req: Request, res: Response){
+  const userId = req.user!.userId
+  const { id } = req.params
+  console.log(req.body)
+  const application = await updateApplication(id as string, userId, req.body)
   res.json(application)
 }
 
