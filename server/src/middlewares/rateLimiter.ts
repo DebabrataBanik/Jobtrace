@@ -6,7 +6,8 @@ export const authLimiter = rateLimit({
   limit: 5,
   message: { message: 'Too many attempts, please try again later.' },
   legacyHeaders: false,
-  standardHeaders: true
+  standardHeaders: true,
+  keyGenerator: (req) => `${req.ip}-${req.body.email || ''}`
 })
 
 export const applicationLimiter = rateLimit({
