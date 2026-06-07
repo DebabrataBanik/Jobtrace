@@ -14,11 +14,13 @@ export const applicationLimiter = rateLimit({
   limit: 100,
   message: { message: 'Will you go slower boy' }, 
   legacyHeaders: false,
-  standardHeaders: true
+  standardHeaders: true,
+  keyGenerator: (req) => req.user?.userId || req.ip || ''
 })
 
 export const applicationThrottle = slowDown({
   windowMs: 5*60*1000,
   delayAfter: 50,
-  delayMs: (hits) => hits * 100
+  delayMs: (hits) => hits * 100,
+  keyGenerator: (req) => req.user?.userId || req.ip || ''
 })
