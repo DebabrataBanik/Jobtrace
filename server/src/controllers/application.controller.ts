@@ -23,7 +23,6 @@ export async function getOne(req: Request, res: Response){
 export async function updateOne(req: Request, res: Response){
   const userId = req.user!.userId
   const { id } = req.params
-  console.log(req.body)
   const application = await updateApplication(id as string, userId, req.body)
   res.json(application)
 }
