@@ -1,4 +1,4 @@
-import { rateLimit } from 'express-rate-limit'
+import { rateLimit, ipKeyGenerator } from 'express-rate-limit'
 import { slowDown } from 'express-slow-down'
 
 export const authLimiter = rateLimit({
@@ -7,7 +7,7 @@ export const authLimiter = rateLimit({
   message: { message: 'Too many attempts, please try again later.' },
   legacyHeaders: false,
   standardHeaders: true,
-  keyGenerator: (req) => `${req.ip}-${req.body.email || ''}`
+  keyGenerator: (req) => `${ipKeyGenerator(req.ip ?? '')}-${req.body.email || ''}`
 })
 
 export const applicationLimiter = rateLimit({
@@ -16,12 +16,12 @@ export const applicationLimiter = rateLimit({
   message: { message: 'Will you go slower boy' }, 
   legacyHeaders: false,
   standardHeaders: true,
-  keyGenerator: (req) => req.user?.userId || req.ip || ''
+  keyGenerator: (req) => req.user?.userId || ipKeyGenerator(req.ip ?? '')
 })
 
 export const applicationThrottle = slowDown({
   windowMs: 5*60*1000,
   delayAfter: 50,
   delayMs: (hits) => hits * 100,
-  keyGenerator: (req) => req.user?.userId || req.ip || ''
+  keyGenerator: (req) => req.user?.userId || ipKeyGenerator(req.ip ?? '')
 })
