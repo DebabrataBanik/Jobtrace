@@ -4,13 +4,19 @@ import { connectDB } from './config/db.js'
 import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
-import 'dotenv/config'
 import { authRouter } from './routes/auth.router.js'
 import { errors } from 'jose'
 import { applicationRouter } from './routes/application.router.js'
 import { authenticate } from './middlewares/auth.middleware.js'
 import { applicationLimiter, applicationThrottle } from './middlewares/rateLimiter.js'
 import mongoose from 'mongoose'
+import dotenv from 'dotenv'
+import path from 'path'
+
+const environment = process.env.NODE_ENV || 'development'
+dotenv.config({
+  path: path.resolve(process.cwd(), `.env.${environment}`)
+})
 
 const app = express()
 

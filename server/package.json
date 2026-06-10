@@ -5,7 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "cross-env NODE_ENV=development tsx watch src/index.ts",
+    "test": "cross-env NODE_ENV=test vitest",
+    "build": "tsc",
+    "start": "cross-env NODE_ENV=production node dist/index.js"
   },
   "keywords": [],
   "author": "Debabrata Banik",
@@ -29,7 +32,11 @@
     "@types/express": "^5.0.6",
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.9.1",
+    "cross-env": "^10.1.0",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3"
+  },
+  "allowScripts": {
+    "esbuild@0.28.0": true
   }
 }
