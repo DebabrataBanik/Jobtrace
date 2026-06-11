@@ -1,3 +1,4 @@
+import './config/env.js';
 import express, { Request, Response, NextFunction } from 'express';
 import ApiError from './utils/ApiError.js';
 import { connectDB } from './config/db.js';
@@ -10,13 +11,6 @@ import { applicationRouter } from './routes/application.router.js';
 import { authenticate } from './middlewares/auth.middleware.js';
 import { applicationLimiter, applicationThrottle } from './middlewares/rateLimiter.js';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import path from 'path';
-
-const environment = process.env.NODE_ENV || 'development';
-dotenv.config({
-  path: path.resolve(process.cwd(), `.env.${environment}`),
-});
 
 const app = express();
 
