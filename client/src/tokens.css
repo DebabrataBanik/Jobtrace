@@ -1,0 +1,56 @@
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+:root {
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8f9fa;
+  --color-bg-tertiary: #f1f3f5;
+  --color-surface: #ffffff;
+  --color-border: #e1e4e8;
+  --color-border-subtle: #eceef0;
+
+  --color-text-primary: #161616;
+  --color-text-secondary: #4c4c4c;
+  --color-text-tertiary: #e5e5e5;
+
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-subtle: #eff6ff;
+
+  --color-success: #16a34a;
+  --color-warning: #ca8a04;
+  --color-error: #dc2626;
+
+  --font-sans: "Clash Display", system-ui, -apple-system, sans-serif;
+
+  --sidebar-width: 16.25rem;
+  --content-max-width: 45rem;
+  --feed-max-width: 60rem;
+  --page-max-width: 80rem;
+}
+
+:root[data-theme="dark"] {
+  --color-bg-primary: #101010;
+  --color-bg-secondary: #161b22;
+  --color-bg-tertiary: #21262d;
+  --color-surface: #161b22;
+  --color-border: #30363d;
+  --color-border-subtle: #21262d;
+
+  --color-text-primary: #e6edf3;
+  --color-text-secondary: #8b949e;
+  --color-text-tertiary: #6e7681;
+
+  --color-accent: #58a6ff;
+  --color-accent-hover: #79c0ff;
+  --color-accent-subtle: #1a2332;
+
+  --color-success: #3fb950;
+  --color-warning: #d29922;
+  --color-error: #f85149;
+}
