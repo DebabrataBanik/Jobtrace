@@ -6,7 +6,7 @@ import {
   deleteOne,
   updateOne,
 } from '../controllers/application.controller.js';
-import { validateRequest, validateId } from '../middlewares/auth.middleware.js';
+import { validateRequest, validateId } from '../middlewares/request.middleware.js';
 import {
   ApplicationSchema,
   UpdateApplicationSchema,
