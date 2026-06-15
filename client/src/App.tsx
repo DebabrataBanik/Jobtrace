@@ -1,5 +1,11 @@
+import Sidebar from "./components/Sidebar";
+
 const App = () => {
-  return <div>Jobtrace</div>;
+  return (
+    <div>
+      <Sidebar />
+    </div>
+  );
 };
 
 export default App;

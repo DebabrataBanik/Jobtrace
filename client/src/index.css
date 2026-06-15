@@ -20,3 +20,30 @@
 
   --font-sans: "Clash Display", system-ui, -apple-system, sans-serif;
 }
+
+@layer base {
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-accent-subtle text-text-primary;
+  }
+
+  aside {
+    @apply flex flex-col p-4 w-65 border-r border-r-border h-screen bg-bg-primary;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  .menu-item {
+    @apply w-full flex items-center gap-2 rounded-sm px-2 py-1 focus:outline-offset-2 focus:outline-2 focus:outline-text-tertiary hover:bg-accent-subtle duration-300;
+  }
+  .menu-item.active {
+    @apply font-medium;
+  }
+}
