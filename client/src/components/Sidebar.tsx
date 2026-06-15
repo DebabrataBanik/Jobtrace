@@ -4,8 +4,8 @@ import UserItem from "./UserItem";
 export default function Sidebar() {
   return (
     <aside>
-      <div className="pb-4 border-b border-b-border">
-        <div className="px-1 font-semibold text-xl">Jobtrace</div>
+      <div className="pt-1 pb-5 border-b border-b-border">
+        <div className="px-2 font-semibold text-xl tracking-wide">Jobtrace</div>
       </div>
       <div className="pt-4 px-1">
         <span className="text-xs font-medium text-text-tertiary">MAIN</span>
