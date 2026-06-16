@@ -55,6 +55,10 @@ input[type="search"]::-ms-reveal {
   header {
     @apply h-fit w-full p-4 bg-bg-primary border-b border-b-border;
   }
+
+  main {
+    @apply p-4;
+  }
 }
 
 @layer components {
@@ -67,5 +71,12 @@ input[type="search"]::-ms-reveal {
 
   .search-input {
     @apply w-80 p-1.5 pl-8 bg-bg-tertiary rounded-md focus:outline-text-tertiary;
+  }
+
+  .filter-item {
+    @apply w-24 text-sm rounded-md py-0.5;
+  }
+  .filter-item.active {
+    @apply bg-bg-primary font-medium shadow-sm;
   }
 }
