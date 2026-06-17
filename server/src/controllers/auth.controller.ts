@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { loginUser, registerUser } from '../services/auth.service.js';
+import { findUser, loginUser, registerUser } from '../services/auth.service.js';
 
 export async function register(req: Request, res: Response) {
   const { token, user } = await registerUser(req.body);
@@ -33,4 +33,11 @@ export async function login(req: Request, res: Response) {
     status: 'success',
     user,
   });
+}
+
+export async function getUser(req: Request, res: Response) {
+  const userId = req.user!.userId;
+  const user = await findUser(userId);
+
+  res.json(user);
 }
