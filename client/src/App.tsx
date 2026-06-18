@@ -2,6 +2,7 @@ import { createBrowserRouter, redirect, RouterProvider } from "react-router";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
+import Register from "./pages/register";
 
 const router = createBrowserRouter([
   {
@@ -15,10 +16,12 @@ const router = createBrowserRouter([
             const res = await fetch("http://localhost:8000/auth/me", {
               credentials: "include",
             });
-            if (!res.ok) return redirect("/login");
+            if (!res.ok) {
+              return redirect("login");
+            }
             return { user: await res.json() };
           } catch {
-            return redirect("/login");
+            return redirect("login");
           }
         },
         Component: Dashboard,
@@ -28,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "login",
     Component: Login,
+  },
+  {
+    path: "register",
+    Component: Register,
   },
 ]);
 

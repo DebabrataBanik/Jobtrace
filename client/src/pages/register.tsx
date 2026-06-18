@@ -4,15 +4,17 @@ import { useNavigate } from "react-router";
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 type FormData = {
+  username: string;
   email: string;
   password: string;
 };
 
 type FormError = Partial<FormData>;
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
+    username: "",
     email: "",
     password: "",
   });
@@ -40,9 +42,9 @@ export default function Login() {
     }));
   }
 
-  async function login(creds: FormData) {
+  async function register(creds: FormData) {
     try {
-      const res = await fetch("http://localhost:8000/auth/login", {
+      const res = await fetch("http://localhost:8000/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +67,11 @@ export default function Login() {
     e.preventDefault();
 
     const error: FormError = {};
-    const { email, password } = formData;
+    const { username, email, password } = formData;
+
+    if (username.trim().length === 0) {
+      error.username = "Please enter a username";
+    }
     if (!email.trim() || !emailRegex.test(email.trim())) {
       error.email = "Please enter a valid email address";
     }
@@ -75,8 +81,13 @@ export default function Login() {
     setFormError(error);
 
     if (Object.values(error).length === 0) {
-      await login({ email: email.trim(), password });
+      await register({
+        username: username.trim(),
+        email: email.trim(),
+        password,
+      });
       setFormData({
+        username: "",
         email: "",
         password: "",
       });
@@ -102,6 +113,19 @@ export default function Login() {
           onSubmit={handleSubmit}
           className="flex flex-col gap-2 mt-2"
         >
+          <label>
+            <span className="pl-1 text-sm">Username</span>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              className="form-input"
+            />
+            <span className="form-error">
+              {formError && formError.username}
+            </span>
+          </label>
           <label>
             <span className="pl-1 text-sm">Email Address</span>
             <input
@@ -131,16 +155,16 @@ export default function Login() {
             className="w-full bg-accent p-1.5 rounded-sm mt-5 text-bg-primary focus:outline-accent focus:outline-offset-2"
             type="submit"
           >
-            Login
+            Sign Up
           </button>
         </form>
         <p className="mt-10 text-center text-sm">
-          Don't have an account?
+          Already have an account?
           <button
-            onClick={() => navigate("/register", { replace: true })}
+            onClick={() => navigate("/login", { replace: true })}
             className="px-1 font-medium hover:underline"
           >
-            Sign Up
+            Login
           </button>
         </p>
       </div>

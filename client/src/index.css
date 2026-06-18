@@ -80,11 +80,11 @@ input[type="search"]::-ms-reveal {
     @apply bg-bg-primary font-medium shadow-sm;
   }
 
-  .login-input {
+  .form-input {
     @apply block text-base p-1.25 pl-3 caret-text-tertiary border border-transparent w-80 bg-bg-primary rounded-sm focus:border focus:border-border outline-none;
   }
 
-  .login-error {
+  .form-error {
     @apply text-xs text-error pl-1 block h-4;
   }
 }
