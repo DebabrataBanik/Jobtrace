@@ -63,7 +63,7 @@ input[type="search"]::-ms-reveal {
 
 @layer components {
   .menu-item {
-    @apply w-full flex items-center gap-2 rounded-sm px-2 py-1 focus:outline-offset-2 focus:outline-2 focus:outline-text-tertiary hover:bg-accent-subtle duration-300;
+    @apply w-full flex items-center gap-2 rounded-sm px-2 py-1 hover:bg-accent-subtle duration-300;
   }
   .menu-item.active {
     @apply font-medium;
@@ -78,5 +78,13 @@ input[type="search"]::-ms-reveal {
   }
   .filter-item.active {
     @apply bg-bg-primary font-medium shadow-sm;
+  }
+
+  .login-input {
+    @apply block text-base p-1.25 pl-3 caret-text-tertiary border border-transparent w-80 bg-bg-primary rounded-sm focus:border focus:border-border outline-none;
+  }
+
+  .login-error {
+    @apply text-xs text-error pl-1 block h-4;
   }
 }
