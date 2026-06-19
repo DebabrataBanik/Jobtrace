@@ -24,3 +24,8 @@ export function validateId(req: Request, res: Response, next: NextFunction) {
   }
   next();
 }
+
+export const noCacheMiddleware = (_req: Request, res: Response, next: NextFunction) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  next();
+};
