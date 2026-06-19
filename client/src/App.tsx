@@ -1,30 +1,35 @@
-import { createBrowserRouter, redirect, RouterProvider } from "react-router";
+import {
+  createBrowserRouter,
+  Outlet,
+  RouterProvider,
+  type LoaderFunctionArgs,
+} from "react-router";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import Register from "./pages/register";
+import { authMiddleware } from "./middleware/auth";
+import { userContext } from "./context/routerContext";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    Component: Layout,
+    middleware: [authMiddleware],
+    element: <Outlet />,
     children: [
       {
-        index: true,
-        loader: async () => {
-          try {
-            const res = await fetch("http://localhost:8000/auth/me", {
-              credentials: "include",
-            });
-            if (!res.ok) {
-              return redirect("login");
-            }
-            return { user: await res.json() };
-          } catch {
-            return redirect("login");
-          }
+        path: "/",
+        id: "root",
+        Component: Layout,
+        loader: async ({ context }: LoaderFunctionArgs) => {
+          const user = context.get(userContext);
+          return user;
         },
-        Component: Dashboard,
+        children: [
+          {
+            index: true,
+            Component: Dashboard,
+          },
+        ],
       },
     ],
   },
