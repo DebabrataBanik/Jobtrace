@@ -7,7 +7,7 @@ import Layout from "./components/Layout";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
 import Register from "./pages/register";
-import { authMiddleware } from "./middleware/auth";
+import { authMiddleware, guestMiddleware } from "./middleware/auth";
 import { userContext } from "./context/routerContext";
 import HydrateFallback from "./components/HydrateFallback";
 import NotFound from "./pages/not-found";
@@ -30,12 +30,17 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "login",
-    Component: Login,
-  },
-  {
-    path: "register",
-    Component: Register,
+    middleware: [guestMiddleware],
+    children: [
+      {
+        path: "login",
+        Component: Login,
+      },
+      {
+        path: "register",
+        Component: Register,
+      },
+    ],
   },
   {
     path: "*",

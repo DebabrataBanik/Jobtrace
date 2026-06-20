@@ -12,3 +12,13 @@ export const authMiddleware: MiddlewareFunction = async ({ context }) => {
 
   context.set(userContext, await res.json());
 };
+
+export const guestMiddleware: MiddlewareFunction = async () => {
+  const res = await fetch("http://localhost:8000/auth/me", {
+    credentials: "include",
+  });
+
+  if (res.ok) {
+    return redirect("/");
+  }
+};
