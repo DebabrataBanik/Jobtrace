@@ -2,7 +2,7 @@ import { redirect, type MiddlewareFunction } from "react-router";
 import { userContext } from "../context/routerContext";
 
 export const authMiddleware: MiddlewareFunction = async ({ context }) => {
-  const res = await fetch("http://localhost:8000/auth/me", {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
     credentials: "include",
   });
 
@@ -14,7 +14,7 @@ export const authMiddleware: MiddlewareFunction = async ({ context }) => {
 };
 
 export const guestMiddleware: MiddlewareFunction = async () => {
-  const res = await fetch("http://localhost:8000/auth/me", {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
     credentials: "include",
   });
 
