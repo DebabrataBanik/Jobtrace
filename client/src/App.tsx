@@ -10,6 +10,7 @@ import Register from "./pages/register";
 import { authMiddleware } from "./middleware/auth";
 import { userContext } from "./context/routerContext";
 import HydrateFallback from "./components/HydrateFallback";
+import NotFound from "./pages/not-found";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "register",
     Component: Register,
+  },
+  {
+    path: "*",
+    Component: NotFound,
   },
 ]);
 
