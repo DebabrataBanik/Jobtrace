@@ -1,6 +1,5 @@
 import {
   createBrowserRouter,
-  Outlet,
   RouterProvider,
   type LoaderFunctionArgs,
 } from "react-router";
@@ -10,26 +9,22 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import { authMiddleware } from "./middleware/auth";
 import { userContext } from "./context/routerContext";
+import HydrateFallback from "./components/HydrateFallback";
 
 const router = createBrowserRouter([
   {
+    path: "/",
+    HydrateFallback: HydrateFallback,
     middleware: [authMiddleware],
-    element: <Outlet />,
+    Component: Layout,
+    loader: async ({ context }: LoaderFunctionArgs) => {
+      const user = context.get(userContext);
+      return user;
+    },
     children: [
       {
-        path: "/",
-        id: "root",
-        Component: Layout,
-        loader: async ({ context }: LoaderFunctionArgs) => {
-          const user = context.get(userContext);
-          return user;
-        },
-        children: [
-          {
-            index: true,
-            Component: Dashboard,
-          },
-        ],
+        index: true,
+        Component: Dashboard,
       },
     ],
   },
