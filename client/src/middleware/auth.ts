@@ -6,7 +6,7 @@ export const authMiddleware: MiddlewareFunction = async ({ context }) => {
     credentials: "include",
   });
 
-  if (!res.ok) {
+  if (res.status === 401) {
     throw redirect("/login");
   }
 

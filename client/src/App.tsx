@@ -11,6 +11,7 @@ import { authMiddleware, guestMiddleware } from "./middleware/auth";
 import { userContext } from "./context/routerContext";
 import HydrateFallback from "./components/HydrateFallback";
 import NotFound from "./pages/not-found";
+import Error from "./components/Error";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       const user = context.get(userContext);
       return user;
     },
+    ErrorBoundary: Error,
     children: [
       {
         index: true,
@@ -31,6 +33,8 @@ const router = createBrowserRouter([
   },
   {
     middleware: [guestMiddleware],
+    HydrateFallback: HydrateFallback,
+    ErrorBoundary: Error,
     children: [
       {
         path: "login",
