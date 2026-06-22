@@ -31,6 +31,7 @@ input[type="search"]::-ms-reveal {
   --color-success: var(--color-success);
   --color-warning: var(--color-warning);
   --color-error: var(--color-error);
+  --color-error-subtle: var(--color-error-subtle);
 
   --font-sans: "Clash Display", system-ui, -apple-system, sans-serif;
 }
@@ -86,5 +87,9 @@ input[type="search"]::-ms-reveal {
 
   .form-error {
     @apply text-xs text-error pl-1 block h-4;
+  }
+
+  .user_dropdown-item {
+    @apply flex items-center gap-3 text-sm py-1.5 px-2 mx-2 rounded-md;
   }
 }
