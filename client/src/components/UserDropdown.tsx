@@ -3,8 +3,10 @@ import { UserIcon } from "lucide-react";
 import { MoonIcon } from "lucide-react";
 import { SunIcon } from "lucide-react";
 import { LogOutIcon } from "lucide-react";
+import { useTheme } from "../context/themeContext";
 
 export default function UserDropdown() {
+  const { toggleTheme, isDarkMode } = useTheme();
   const navigate = useNavigate();
   async function logout() {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
@@ -25,8 +27,11 @@ export default function UserDropdown() {
           <UserIcon size={15} />
           Profile
         </button>
-        <button className="user_dropdown-item hover:bg-bg-secondary">
-          <MoonIcon size={15} />
+        <button
+          onClick={toggleTheme}
+          className="user_dropdown-item hover:bg-bg-secondary"
+        >
+          {isDarkMode ? <MoonIcon size={15} /> : <SunIcon size={15} />}
           Theme
         </button>
       </div>

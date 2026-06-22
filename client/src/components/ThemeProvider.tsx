@@ -1,0 +1,29 @@
+import { useState, useEffect, type ReactNode } from "react";
+import { ThemeContext } from "../context/themeContext";
+
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) return savedTheme === "dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+
+  useEffect(() => {
+    const theme = isDarkMode ? "dark" : "light";
+    document.documentElement.setAttribute(
+      "data-theme",
+      isDarkMode ? "dark" : "light",
+    );
+    localStorage.setItem("theme", theme);
+  }, [isDarkMode]);
+
+  function toggleTheme() {
+    setIsDarkMode((prev) => !prev);
+  }
+
+  return (
+    <ThemeContext.Provider value={{ toggleTheme, isDarkMode }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
