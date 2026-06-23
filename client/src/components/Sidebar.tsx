@@ -1,5 +1,6 @@
 import { ArchiveIcon, LayoutDashboard } from "lucide-react";
 import UserItem from "./UserItem";
+import { NavLink } from "react-router";
 
 export default function Sidebar() {
   return (
@@ -14,16 +15,16 @@ export default function Sidebar() {
         <nav>
           <ul className="flex flex-col gap-1 mt-2">
             <li>
-              <button className="menu-item active">
+              <NavLink to="/" className="menu-item">
                 <LayoutDashboard size={14} />
                 Dashboard
-              </button>
+              </NavLink>
             </li>
             <li>
-              <button className="menu-item">
+              <NavLink to="/archived" className="menu-item">
                 <ArchiveIcon size={14} />
                 Archived
-              </button>
+              </NavLink>
             </li>
           </ul>
         </nav>

@@ -5,6 +5,7 @@ import {
 } from "react-router";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/dashboard";
+import Archived from "./pages/archived";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import { authMiddleware, guestMiddleware } from "./middleware/auth";
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: Dashboard,
+      },
+      {
+        path: "/archived",
+        Component: Archived,
       },
     ],
   },

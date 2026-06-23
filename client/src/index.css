@@ -67,7 +67,7 @@ input[type="search"]::-ms-reveal {
     @apply w-full flex items-center gap-2 rounded-sm px-2 py-1 hover:bg-accent-subtle duration-300;
   }
   .menu-item.active {
-    @apply font-medium;
+    @apply font-medium bg-accent-subtle;
   }
 
   .search-input {
