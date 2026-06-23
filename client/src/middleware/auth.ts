@@ -1,24 +1,18 @@
 import { redirect, type MiddlewareFunction } from "react-router";
 import { userContext } from "../context/routerContext";
+import { getUser } from "../services/getUser";
 
 export const authMiddleware: MiddlewareFunction = async ({ context }) => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
-    credentials: "include",
-  });
-
-  if (res.status === 401) {
+  const user = await getUser();
+  if (!user) {
     throw redirect("/login");
   }
-
-  context.set(userContext, await res.json());
+  context.set(userContext, user);
 };
 
 export const guestMiddleware: MiddlewareFunction = async () => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
-    credentials: "include",
-  });
-
-  if (res.ok) {
+  const user = await getUser();
+  if (user) {
     return redirect("/");
   }
 };
