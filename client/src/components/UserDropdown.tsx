@@ -14,10 +14,8 @@ export default function UserDropdown() {
       credentials: "include",
     });
     if (res.ok) {
-      const data = await res.json();
-      console.log(data);
+      navigate("/login", { replace: true });
     }
-    navigate("/", { replace: true });
   }
 
   return (
