@@ -32,6 +32,9 @@ input[type="search"]::-ms-reveal {
   --color-warning: var(--color-warning);
   --color-error: var(--color-error);
   --color-error-subtle: var(--color-error-subtle);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
 
   --font-sans: "Clash Display", system-ui, -apple-system, sans-serif;
 }
@@ -78,7 +81,7 @@ input[type="search"]::-ms-reveal {
     @apply w-24 text-sm rounded-md py-0.5;
   }
   .filter-item.active {
-    @apply bg-bg-primary font-medium shadow-sm;
+    @apply bg-bg-primary font-medium shadow-md;
   }
 
   .form-input {
