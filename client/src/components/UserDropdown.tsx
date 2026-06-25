@@ -19,7 +19,7 @@ export default function UserDropdown() {
   }
 
   return (
-    <div className="absolute bg-bg-primary bottom-0 -right-40 border border-border-subtle rounded-lg w-35">
+    <div className="absolute z-10 bg-bg-primary bottom-0 -right-40 border border-border-subtle rounded-lg w-35">
       <div className="flex flex-col py-2">
         <button className="user_dropdown-item hover:bg-bg-secondary">
           <UserIcon size={15} />
