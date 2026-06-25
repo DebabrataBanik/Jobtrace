@@ -7,7 +7,12 @@ import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
+  getFilteredRowModel,
   flexRender,
+  type ColumnFiltersState,
+  type RowSelectionState,
+  type PaginationState,
+  type ColumnDef,
 } from "@tanstack/react-table";
 
 export default function Applications() {
@@ -21,15 +26,17 @@ export default function Applications() {
     queryFn: getApplications,
   });
 
-  const [rowSelection, setRowSelection] = useState({});
-  const [pagination, setPagination] = useState({
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 7,
   });
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const columnHelper = createColumnHelper<Application>();
 
-  const columns = [
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const columns: ColumnDef<Application, any>[] = [
     columnHelper.display({
       id: "select",
       header: ({ table }) => (
@@ -87,18 +94,26 @@ export default function Applications() {
     }),
   ];
 
+  console.log("Render");
+
   const table = useReactTable({
     data,
     columns,
     state: {
       rowSelection,
       pagination,
+      columnFilters,
     },
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
   });
+
+  const currentStatusFilter =
+    columnFilters.find((f) => f.id === "status")?.value ?? "";
 
   if (isError) {
     return <p className="p-4 text-error text-sm">Error: {error.message}</p>;
@@ -114,10 +129,34 @@ export default function Applications() {
     <div className="rounded-md bg-bg-primary relative border border-border">
       <div className="p-4 border-b border-b-border-subtle shadow-xs flex justify-between items-center">
         <div className="p-1 w-fit rounded-md bg-bg-tertiary flex items-center gap-2">
-          <button className="filter-item active">All</button>
-          <button className="filter-item">Assessment</button>
-          <button className="filter-item">Interview</button>
-          <button className="filter-item">Rejected</button>
+          <button
+            onClick={() => setColumnFilters([])}
+            className={`filter-item ${currentStatusFilter === "" ? "active" : ""}`}
+          >
+            All
+          </button>
+          <button
+            onClick={() => setColumnFilters([{ id: "status", value: "OA" }])}
+            className={`filter-item ${currentStatusFilter === "OA" ? "active" : ""}`}
+          >
+            Assessment
+          </button>
+          <button
+            onClick={() =>
+              setColumnFilters([{ id: "status", value: "Interview" }])
+            }
+            className={`filter-item ${currentStatusFilter === "Interview" ? "active" : ""}`}
+          >
+            Interview
+          </button>
+          <button
+            onClick={() =>
+              setColumnFilters([{ id: "status", value: "Rejected" }])
+            }
+            className={`filter-item ${currentStatusFilter === "Rejected" ? "active" : ""}`}
+          >
+            Rejected
+          </button>
         </div>
         {selectedRowIds.length > 0 && (
           <span className="text-sm text-text-secondary font-medium">

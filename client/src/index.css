@@ -82,7 +82,7 @@ input[type="search"]::-ms-reveal {
   }
 
   .filter-item {
-    @apply w-24 text-sm rounded-md py-0.5;
+    @apply w-26 text-sm rounded-md py-0.5;
   }
   .filter-item.active {
     @apply bg-bg-primary font-medium shadow-md;
