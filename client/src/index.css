@@ -67,6 +67,10 @@ input[type="search"]::-ms-reveal {
   input[type="checkbox"] {
     @apply absolute opacity-0 w-0 h-0;
   }
+
+  button:disabled {
+    @apply cursor-not-allowed pointer-events-none opacity-50;
+  }
 }
 
 @layer components {
@@ -101,7 +105,7 @@ input[type="search"]::-ms-reveal {
   }
 
   .checkbox-label {
-    @apply block relative w-4.5 h-4.5 border-2 border-border rounded-md cursor-pointer hover:border-border-subtle duration-300;
+    @apply block relative w-4.5 h-4.5 border-2 border-border rounded-md cursor-pointer;
   }
 
   .checkbox-label:has(input[type="checkbox"]:checked) {

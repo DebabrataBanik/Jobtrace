@@ -94,8 +94,6 @@ export default function Applications() {
     }),
   ];
 
-  console.log("Render");
-
   const table = useReactTable({
     data,
     columns,
@@ -132,12 +130,14 @@ export default function Applications() {
           <button
             onClick={() => setColumnFilters([])}
             className={`filter-item ${currentStatusFilter === "" ? "active" : ""}`}
+            disabled={data.length === 0}
           >
             All
           </button>
           <button
             onClick={() => setColumnFilters([{ id: "status", value: "OA" }])}
             className={`filter-item ${currentStatusFilter === "OA" ? "active" : ""}`}
+            disabled={data.length === 0}
           >
             Assessment
           </button>
@@ -146,6 +146,7 @@ export default function Applications() {
               setColumnFilters([{ id: "status", value: "Interview" }])
             }
             className={`filter-item ${currentStatusFilter === "Interview" ? "active" : ""}`}
+            disabled={data.length === 0}
           >
             Interview
           </button>
@@ -154,6 +155,7 @@ export default function Applications() {
               setColumnFilters([{ id: "status", value: "Rejected" }])
             }
             className={`filter-item ${currentStatusFilter === "Rejected" ? "active" : ""}`}
+            disabled={data.length === 0}
           >
             Rejected
           </button>
@@ -165,22 +167,18 @@ export default function Applications() {
         )}
       </div>
 
-      {data.length > 0 &&
-        table.getHeaderGroups().map((headerGroup) => (
-          <div
-            key={headerGroup.id}
-            className="px-4 py-2 bg-bg-secondary shadow-xs text-sm grid grid-cols-[40px_1fr_1fr_1fr_1fr_1fr] place-items-center font-medium"
-          >
-            {headerGroup.headers.map((header) => (
-              <div key={header.id}>
-                {flexRender(
-                  header.column.columnDef.header,
-                  header.getContext(),
-                )}
-              </div>
-            ))}
-          </div>
-        ))}
+      {table.getHeaderGroups().map((headerGroup) => (
+        <div
+          key={headerGroup.id}
+          className="px-4 py-2 bg-bg-secondary shadow-xs text-sm grid grid-cols-[40px_1fr_1fr_1fr_1fr_1fr] place-items-center font-medium"
+        >
+          {headerGroup.headers.map((header) => (
+            <div key={header.id}>
+              {flexRender(header.column.columnDef.header, header.getContext())}
+            </div>
+          ))}
+        </div>
+      ))}
 
       <div>
         {table.getRowModel().rows.length ? (
@@ -198,7 +196,7 @@ export default function Applications() {
               ))}
             </div>
           ))
-        ) : (
+        ) : data.length === 0 ? (
           <div className="text-sm flex flex-col items-center gap-2 py-8">
             <p className="text-base font-medium">No applications to show.</p>
             <span className="text-text-secondary">
@@ -208,10 +206,19 @@ export default function Applications() {
               Add application
             </button>
           </div>
+        ) : (
+          <div className="text-sm flex flex-col items-center gap-2 py-8">
+            <p className="text-base font-medium">
+              No applications match this stage.
+            </p>
+            <span className="text-text-secondary">
+              Try selecting a different filter above.
+            </span>
+          </div>
         )}
       </div>
 
-      {data.length > 7 && (
+      {table.getFilteredRowModel().rows.length > 7 && (
         <div className="p-4 px-7 border-t border-t-border-subtle flex items-center justify-between text-sm">
           <span className="text-text-secondary">
             Page {table.getState().pagination.pageIndex + 1} of{" "}
