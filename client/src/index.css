@@ -63,6 +63,10 @@ input[type="search"]::-ms-reveal {
   main {
     @apply p-4;
   }
+
+  input[type="checkbox"] {
+    @apply absolute opacity-0 w-0 h-0;
+  }
 }
 
 @layer components {
@@ -94,5 +98,17 @@ input[type="search"]::-ms-reveal {
 
   .user_dropdown-item {
     @apply flex items-center gap-3 text-sm py-1.5 px-2 mx-2 rounded-md;
+  }
+
+  .checkbox-label {
+    @apply block relative w-4.5 h-4.5 border-2 border-border rounded-md cursor-pointer hover:border-border-subtle duration-300;
+  }
+
+  .checkbox-label:has(input[type="checkbox"]:checked) {
+    @apply bg-accent border-accent;
+  }
+
+  .checkbox-label:has(input[type="checkbox"]:checked)::after {
+    @apply absolute content-[''] left-1/2 top-[53%] -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[url('./assets/check.svg')] bg-contain bg-no-repeat;
   }
 }
