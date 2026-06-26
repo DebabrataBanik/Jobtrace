@@ -119,6 +119,7 @@ export default function Applications() {
       globalFilter,
       sorting,
     },
+    maxMultiSortColCount: 3,
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
     onColumnFiltersChange: setColumnFilters,
@@ -226,7 +227,7 @@ export default function Applications() {
             return (
               <button
                 key={header.id}
-                onClick={header.column.getToggleSortingHandler()}
+                onClick={() => header.column.toggleSorting(undefined, true)}
                 className="flex items-center gap-2 select-none cursor-pointer"
                 disabled={table.getFilteredRowModel().rows.length === 0}
               >
