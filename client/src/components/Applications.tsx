@@ -45,12 +45,15 @@ export default function Applications() {
     columnHelper.display({
       id: "select",
       header: ({ table }) => (
-        <label className="checkbox-label">
+        <label
+          className={`checkbox-label ${table.getFilteredRowModel().rows.length === 0 ? "cursor-default" : ""}`}
+        >
           <input
             type="checkbox"
             checked={table.getIsAllRowsSelected()}
             onChange={table.getToggleAllRowsSelectedHandler()}
             className="checkbox"
+            disabled={table.getFilteredRowModel().rows.length === 0}
           />
         </label>
       ),
@@ -190,6 +193,7 @@ export default function Applications() {
               placeholder="Search"
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
+              disabled={data.length === 0}
             />
             <SearchIcon
               className="absolute left-2.5 text-text-tertiary peer-focus:text-text-primary"
@@ -224,6 +228,7 @@ export default function Applications() {
                 key={header.id}
                 onClick={header.column.getToggleSortingHandler()}
                 className="flex items-center gap-2 select-none cursor-pointer"
+                disabled={table.getFilteredRowModel().rows.length === 0}
               >
                 {flexRender(
                   header.column.columnDef.header,
