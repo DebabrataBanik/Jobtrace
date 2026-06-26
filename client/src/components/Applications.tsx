@@ -1,3 +1,4 @@
+import { SearchIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getApplications } from "../services/applicationService";
 import type { Application } from "../types";
@@ -32,6 +33,7 @@ export default function Applications() {
     pageSize: 7,
   });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const columnHelper = createColumnHelper<Application>();
 
@@ -60,16 +62,19 @@ export default function Applications() {
           />
         </label>
       ),
+      enableGlobalFilter: false,
     }),
     columnHelper.accessor("company", {
       header: "Company",
       cell: (info) => <span className="font-medium">{info.getValue()}</span>,
+      enableGlobalFilter: true,
     }),
     columnHelper.accessor("title", {
       header: "Job Title",
       cell: (info) => (
         <span className="text-center block">{info.getValue()}</span>
       ),
+      enableGlobalFilter: true,
     }),
     columnHelper.accessor("appliedDate", {
       header: "Applied Date",
@@ -79,6 +84,7 @@ export default function Applications() {
           month: "long",
           year: "numeric",
         }),
+      enableGlobalFilter: false,
     }),
     columnHelper.accessor("updatedAt", {
       header: "Last updated",
@@ -88,9 +94,11 @@ export default function Applications() {
           month: "long",
           year: "numeric",
         }),
+      enableGlobalFilter: false,
     }),
     columnHelper.accessor("status", {
       header: "Stage",
+      enableGlobalFilter: false,
     }),
   ];
 
@@ -101,10 +109,12 @@ export default function Applications() {
       rowSelection,
       pagination,
       columnFilters,
+      globalFilter,
     },
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
     onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -125,7 +135,7 @@ export default function Applications() {
 
   return (
     <div className="rounded-md bg-bg-primary relative border border-border">
-      <div className="p-4 border-b border-b-border-subtle shadow-xs flex justify-between items-center">
+      <div className="p-4 border-b border-b-border-subtle shadow-xs flex justify-between items-center gap-4">
         <div className="p-1 w-fit rounded-md bg-bg-tertiary flex items-center gap-2">
           <button
             onClick={() => setColumnFilters([])}
@@ -161,10 +171,25 @@ export default function Applications() {
           </button>
         </div>
         {selectedRowIds.length > 0 && (
-          <span className="text-sm text-text-secondary font-medium">
+          <span className="block ml-auto text-sm text-text-secondary font-medium">
             {selectedRowIds.length} row(s) selected
           </span>
         )}
+        <div>
+          <label className="flex items-center relative">
+            <input
+              type="search"
+              className="search-input text-sm peer"
+              placeholder="Search"
+              value={globalFilter}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+            />
+            <SearchIcon
+              className="absolute left-2.5 text-text-tertiary peer-focus:text-text-primary"
+              size={15}
+            />
+          </label>
+        </div>
       </div>
 
       {table.getHeaderGroups().map((headerGroup) => (
@@ -209,11 +234,8 @@ export default function Applications() {
         ) : (
           <div className="text-sm flex flex-col items-center gap-2 py-8">
             <p className="text-base font-medium">
-              No applications match this stage.
+              No matching applications found.
             </p>
-            <span className="text-text-secondary">
-              Try selecting a different filter above.
-            </span>
           </div>
         )}
       </div>
