@@ -1,4 +1,4 @@
-import { SearchIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getApplications } from "../services/applicationService";
 import type { Application } from "../types";
@@ -9,11 +9,13 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getFilteredRowModel,
+  getSortedRowModel,
   flexRender,
   type ColumnFiltersState,
   type RowSelectionState,
   type PaginationState,
   type ColumnDef,
+  type SortingState,
 } from "@tanstack/react-table";
 
 export default function Applications() {
@@ -33,7 +35,8 @@ export default function Applications() {
     pageSize: 7,
   });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [globalFilter, setGlobalFilter] = useState("");
+  const [globalFilter, setGlobalFilter] = useState<string>("");
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const columnHelper = createColumnHelper<Application>();
 
@@ -63,6 +66,7 @@ export default function Applications() {
         </label>
       ),
       enableGlobalFilter: false,
+      enableSorting: false,
     }),
     columnHelper.accessor("company", {
       header: "Company",
@@ -110,14 +114,17 @@ export default function Applications() {
       pagination,
       columnFilters,
       globalFilter,
+      sorting,
     },
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   const currentStatusFilter =
@@ -135,7 +142,7 @@ export default function Applications() {
 
   return (
     <div className="rounded-md bg-bg-primary relative border border-border">
-      <div className="p-4 border-b border-b-border-subtle shadow-xs flex justify-between items-center gap-4">
+      <div className="p-4 border-b border-b-border-subtle flex justify-between items-center gap-4">
         <div className="p-1 w-fit rounded-md bg-bg-tertiary flex items-center gap-2">
           <button
             onClick={() => setColumnFilters([])}
@@ -195,13 +202,47 @@ export default function Applications() {
       {table.getHeaderGroups().map((headerGroup) => (
         <div
           key={headerGroup.id}
-          className="px-4 py-2 bg-bg-secondary shadow-xs text-sm grid grid-cols-[40px_1fr_1fr_1fr_1fr_1fr] place-items-center font-medium"
+          className="px-4 py-2 bg-bg-secondary shadow-md text-sm grid grid-cols-[40px_1fr_1fr_1fr_1fr_1fr] place-items-center font-medium"
         >
-          {headerGroup.headers.map((header) => (
-            <div key={header.id}>
-              {flexRender(header.column.columnDef.header, header.getContext())}
-            </div>
-          ))}
+          {headerGroup.headers.map((header) => {
+            const canSort = header.column.getCanSort();
+            const isSorted = header.column.getIsSorted();
+
+            if (!canSort) {
+              return (
+                <div key={header.id} className="px-1 text-sm select-none">
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
+                </div>
+              );
+            }
+
+            return (
+              <button
+                key={header.id}
+                onClick={header.column.getToggleSortingHandler()}
+                className="flex items-center gap-2 select-none cursor-pointer"
+              >
+                {flexRender(
+                  header.column.columnDef.header,
+                  header.getContext(),
+                )}
+
+                <span className="sorting-container">
+                  {isSorted === "asc" && <ChevronUpIcon size={10} />}
+                  {isSorted === "desc" && <ChevronDownIcon size={10} />}
+                  {!isSorted && (
+                    <>
+                      <ChevronUpIcon size={8} className="opacity-25" />
+                      <ChevronDownIcon size={8} className="opacity-25" />
+                    </>
+                  )}
+                </span>
+              </button>
+            );
+          })}
         </div>
       ))}
 
