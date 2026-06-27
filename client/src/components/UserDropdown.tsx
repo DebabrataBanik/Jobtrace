@@ -4,16 +4,19 @@ import { MoonIcon } from "lucide-react";
 import { SunIcon } from "lucide-react";
 import { LogOutIcon } from "lucide-react";
 import { useTheme } from "../context/themeContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function UserDropdown() {
   const { toggleTheme, isDarkMode } = useTheme();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   async function logout() {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
       method: "POST",
       credentials: "include",
     });
     if (res.ok) {
+      queryClient.clear();
       navigate("/login", { replace: true });
     }
   }
