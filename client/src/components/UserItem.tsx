@@ -2,9 +2,10 @@ import { ChevronRightIcon } from "lucide-react";
 import { useLoaderData } from "react-router";
 import UserDropdown from "./UserDropdown";
 import { useState } from "react";
+import type { User } from "../types";
 
 export default function UserItem() {
-  const user = useLoaderData();
+  const user = useLoaderData() as User | null;
   const [showUserDropdown, setShowUserDropdown] = useState<boolean>(false);
 
   return (
