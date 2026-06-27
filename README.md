@@ -8,8 +8,6 @@ A full-stack job application tracker. Built to learn by building something real 
 
 Jobtrace lets you track every job application you've sent out — where it stands, what happened, and when. Each application moves through a defined lifecycle (Applied → OA/Interview → Offer/Rejected), and every status change is recorded in a timeline so you have a full history.
 
-Frontend is in progress. This document covers the backend.
-
 ---
 
 ## Tech Stack
@@ -24,6 +22,16 @@ Frontend is in progress. This document covers the backend.
 - Zod v4 — request validation
 - `express-rate-limit` + `express-slow-down` — rate limiting and throttling
 - `helmet` + `morgan`
+- `cookie-parser` — httpOnly cookie handling
+
+**Frontend**
+
+- React 19
+- React Router v7 (Data Mode)
+- TanStack Query v5 — server state management
+- TanStack Table v8 — table UI with sorting, filtering, pagination and row selection
+- Tailwind CSS v4
+- Lucide React
 
 **Tooling**
 
@@ -37,34 +45,24 @@ Frontend is in progress. This document covers the backend.
 
 ```
 server/src/
-├── config/
-│   ├── db.ts                  # MongoDB connection
-│   └── env.ts
-├── controllers/
-│   ├── auth.controller.ts
-│   └── application.controller.ts
-├── middlewares/
-│   ├── auth.middleware.ts     # JWT auth
-│   ├── request.middleware.ts  # request and object id validation
-│   └── rateLimiter.ts
-├── models/
-│   ├── user.model.ts
-│   └── application.model.ts
-├── routes/
-│   ├── auth.router.ts
-│   └── application.router.ts
-├── schema/
-│   ├── auth.schema.ts         # Zod schemas + inferred types
-│   └── application.schema.ts
-├── services/
-│   ├── auth.service.ts        # Business logic: register, login
-│   └── application.service.ts # Business logic: CRUD + status transitions
-├── types/
-│   └── express.d.ts           # Extends Express Request with `user`
-├── utils/
-│   ├── ApiError.ts            # Custom operational error class
-│   └── generateToken.ts       # JWT generation utility
-└── index.ts                   # App entry point, middleware setup, error handler
+├── config/       # DB connection, env loader
+├── controllers/  # Route handlers
+├── middlewares/  # Auth, validation, rate limiting
+├── models/       # Mongoose schemas
+├── routes/       # Express routers
+├── schema/       # Zod schemas and inferred types
+├── services/     # Business logic
+├── types/        # Express type extensions
+└── utils/        # ApiError, token generation
+
+client/src/
+├── components/   # UI components
+├── context/      # Router and theme contexts
+├── middleware/   # Auth and guest route guards
+├── pages/        # Route-level components
+├── services/     # API fetch functions
+├── lib/          # Shared QueryClient instance
+└── types/        # Shared TypeScript types
 ```
 
 ---
@@ -81,11 +79,12 @@ server/src/
 ```
 git clone https://github.com/DebabrataBanik/jobtrace.git
 cd jobtrace/server && npm install
+cd ../client && npm install
 ```
 
 ### Environment Setup
 
-Copy the example file and fill in your values:
+**Backend** - copy the example file and fill in your values:
 
 ```bash
 copy .env.example .env.development
@@ -97,7 +96,9 @@ Then edit `.env.development`:
 PORT=3000
 MONGO_DB_URI=your_mongodb_atlas_connection_string
 JWT_SECRET=your_jwt_secret_min_32_chars
+JWT_EXPIRY=24h
 NODE_ENV=development
+FRONTEND_URL=your_client_localhost_url
 ```
 
 `JWT_SECRET` can be any long random string in development. For production,
@@ -107,12 +108,20 @@ generate one properly:
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
+**Frontend** - create `.env.development` in `client/`:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
 ### Run
 
 ```bash
-npm run dev    # development with watch mode
-npm run build  # compile TypeScript
-npm start      # production (requires build first)
+# Backend
+cd server && npm run dev
+
+# Frontend
+cd client && npm run dev
 ```
 
 ---
@@ -121,14 +130,16 @@ npm start      # production (requires build first)
 
 Base URL: `http://localhost:3000`
 
-All `/applications` routes require an `Authorization: Token <jwt>` header.
+All `/applications` routes require a valid session cookie set on login.
 
 ### Auth
 
-| Method | Route            | Description             |
-| ------ | ---------------- | ----------------------- |
-| POST   | `/auth/register` | Register a new user     |
-| POST   | `/auth/login`    | Login and receive a JWT |
+| Method | Route            | Description                          |
+| ------ | ---------------- | ------------------------------------ |
+| POST   | `/auth/register` | Register a new user                  |
+| POST   | `/auth/login`    | Login and receive a session cookie   |
+| POST   | `/auth/logout`   | Clear the session cookie             |
+| GET    | `/auth/me`       | Get the currently authenticated user |
 
 **Register body**
 
@@ -154,7 +165,6 @@ All `/applications` routes require an `Authorization: Token <jwt>` header.
 ```json
 {
   "status": "success",
-  "token": "<jwt>",
   "user": { "id": "...", "name": "...", "email": "..." }
 }
 ```
@@ -213,9 +223,9 @@ Applied → OA → Interview → Offer
 
 - `Applied` is set only at creation.
 - `OA` and `Interview` are repeatable (multiple interview rounds are valid).
-- `Offer` and `Rejected` are terminal — the application is closed.
+- `Offer` and `Rejected` are terminal — no further status change allowed.
 
-Every status transition is appended to the `timeline` array on the document, giving you a full audit trail:
+Every status transition is appended to the `timeline` array:
 
 ```json
 "timeline": [
@@ -227,45 +237,37 @@ Every status transition is appended to the `timeline` array on the document, giv
 
 ---
 
-## Security
+## Auth Flow
 
-- Passwords are hashed with `bcryptjs` (cost factor 10).
-- JWTs are signed with HS256 via `jose`. Tokens expire in 30 minutes.
-- Auth routes are rate-limited to 5 requests per 10 minutes per IP+email combination.
-- Application routes are rate-limited to 100 requests per 5 minutes per user, with progressive delay after 50.
-- Mongoose `sanitizeFilter` is enabled globally to prevent query injection.
-- Request bodies are capped at 20kb.
-- `helmet` sets standard security headers.
+Authentication uses httpOnly cookies. On login or register, the server sets an `access_token` cookie. Every protected request sends it automatically via `credentials: "include"`.
+On the frontend, React Router v7 middleware runs before any protected route renders. `authMiddleware` calls `/auth/me` — if the response is 401 the user is redirected to `/login`. If it succeeds, the user object is passed through router context and consumed by the layout loader, making it available to `UserItem` via `useLoaderData`.
+
+On logout, the server clears the cookie and the client calls `queryClient.clear()` to purge all cached data before navigating to `/login`, preventing data leaking between accounts.
 
 ---
 
-## Error Handling
+## Security
 
-All errors flow through a single Express error handler. The `ApiError` class is used for expected operational errors (wrong password, not found, etc.). Unexpected errors return a generic 500. JOSE errors (invalid/expired token) are caught specifically and return 401.
-
-Validation errors from Zod return 400 with a structured issues array:
-
-```json
-{
-  "message": {
-    "type": "ZodError",
-    "issues": [
-      { "name": "email", "error": "Please provide a valid email address" }
-    ]
-  }
-}
-```
+- Passwords hashed with `bcryptjs` (cost factor 10)
+- JWTs signed with HS256 via `jose`, stored in httpOnly cookies
+- Cookie `secure` and `sameSite` are environment-aware
+- Auth routes rate-limited to 5 requests per 10 minutes per IP+email
+- Application routes rate-limited to 100 per 5 minutes per user, with progressive delay after 50
+- `sanitizeFilter` enabled globally on Mongoose
+- Request bodies capped at 20kb
+- `helmet` sets standard security headers
+- `Cache-Control: no-store` on all auth and application routes
 
 ---
 
 ## Known Gaps
 
-- **Stateless JWT logout** — there is no token invalidation mechanism yet. Logout on the client just discards the token. Access/refresh token rotation is planned.
-- **No tests yet** — the `test` script is configured, but no tests have been written.
-
----
+- **Stateless JWT logout** — no token invalidation on the server. Logout clears the cookie client-side but a captured token remains valid until expiry. Access/refresh token rotation is planned.
+- **No tests** — test script is configured, none written yet.
+- **Add/edit/delete UI** — backend is fully implemented, frontend forms not built yet.
 
 ## What's Next
 
-- [ ] Access + refresh token implementation
-- [ ] React frontend
+- Add, edit, delete application UI
+- Access + refresh token implementation
+- Loader-based prefetching with TanStack Query
