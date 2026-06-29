@@ -45,7 +45,8 @@ export default function Register() {
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        const isNetworkError = error instanceof TypeError;
+        const isNetworkError =
+          error instanceof TypeError && error.message.includes("fetch");
         setMessage(
           isNetworkError
             ? "Couldn't connect to server. Please try again later."
