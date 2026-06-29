@@ -1,18 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import type { LoginUserData } from "../types";
+import { loginUser } from "../services/authService";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-type FormData = {
-  email: string;
-  password: string;
-};
-
-type FormError = Partial<FormData>;
+type FormError = Partial<LoginUserData>;
 
 export default function Login() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<LoginUserData>({
     email: "",
     password: "",
   });
@@ -40,24 +37,20 @@ export default function Login() {
     }));
   }
 
-  async function login(creds: FormData) {
+  async function login(loginData: LoginUserData) {
     try {
-      const res = await fetch("http://localhost:8000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(creds),
-      });
-      if (!res.ok) {
-        const error = await res.json();
-        throw Error(error.message || `${res.status}, ${res.statusText}`);
-      }
+      await loginUser(loginData);
       navigate("/", { replace: true });
     } catch (error) {
       console.log(error);
-      if (error instanceof Error) setMessage(error.message);
+      if (error instanceof Error) {
+        const isNetworkError = error instanceof TypeError;
+        setMessage(
+          isNetworkError
+            ? "Couldn't connect to server. Please try again later."
+            : error.message,
+        );
+      }
     }
   }
 
@@ -70,7 +63,7 @@ export default function Login() {
       error.email = "Please enter a valid email address";
     }
     if (password.length < 4) {
-      error.password = "Please enter strong password";
+      error.password = "Password cant be this short";
     }
     setFormError(error);
 

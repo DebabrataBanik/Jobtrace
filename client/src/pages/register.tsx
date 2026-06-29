@@ -1,19 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import type { RegisterUserData } from "../types";
+import { registerUser } from "../services/authService";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-type FormData = {
-  username: string;
-  email: string;
-  password: string;
-};
-
-type FormError = Partial<FormData>;
+type FormError = Partial<RegisterUserData>;
 
 export default function Register() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<RegisterUserData>({
     username: "",
     email: "",
     password: "",
@@ -42,24 +38,20 @@ export default function Register() {
     }));
   }
 
-  async function register(creds: FormData) {
+  async function register(registerData: RegisterUserData) {
     try {
-      const res = await fetch("http://localhost:8000/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(creds),
-      });
-      if (!res.ok) {
-        const error = await res.json();
-        throw Error(error.message || `${res.status}, ${res.statusText}`);
-      }
+      await registerUser(registerData);
       navigate("/", { replace: true });
     } catch (error) {
       console.log(error);
-      if (error instanceof Error) setMessage(error.message);
+      if (error instanceof Error) {
+        const isNetworkError = error instanceof TypeError;
+        setMessage(
+          isNetworkError
+            ? "Couldn't connect to server. Please try again later."
+            : error.message,
+        );
+      }
     }
   }
 

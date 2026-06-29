@@ -4,6 +4,17 @@ export type User = {
   email: string;
 };
 
+export type RegisterUserData = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+export type LoginUserData = {
+  email: string;
+  password: string;
+};
+
 type Timeline = {
   status: string;
   date: string;
