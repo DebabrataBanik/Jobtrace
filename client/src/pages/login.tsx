@@ -15,6 +15,7 @@ export default function Login() {
   });
   const [formError, setFormError] = useState<FormError>({});
   const [message, setMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -39,6 +40,7 @@ export default function Login() {
 
   async function login(loginData: LoginUserData) {
     try {
+      setLoading(true);
       await loginUser(loginData);
       navigate("/", { replace: true });
     } catch (error) {
@@ -52,6 +54,8 @@ export default function Login() {
             : error.message,
         );
       }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -124,8 +128,9 @@ export default function Login() {
           <button
             className="w-full bg-accent p-1.5 rounded-sm mt-5 text-bg-primary focus:outline-accent focus:outline-offset-2"
             type="submit"
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
         <p className="mt-10 text-center text-sm">

@@ -14,8 +14,7 @@ async function applicationRequest<T>(endpoint: string): Promise<T> {
     return res.json() as Promise<T>;
   } catch (error) {
     const isNetworkError =
-      error instanceof TypeError ||
-      (error instanceof Error && error.message === "Failed to fetch");
+      error instanceof TypeError && error.message.includes("fetch");
 
     if (isNetworkError) {
       throw new Error("Couldn't connect to server. Please try again later.", {

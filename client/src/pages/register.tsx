@@ -16,6 +16,7 @@ export default function Register() {
   });
   const [formError, setFormError] = useState<FormError>({});
   const [message, setMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -40,6 +41,7 @@ export default function Register() {
 
   async function register(registerData: RegisterUserData) {
     try {
+      setLoading(true);
       await registerUser(registerData);
       navigate("/", { replace: true });
     } catch (error) {
@@ -53,6 +55,8 @@ export default function Register() {
             : error.message,
         );
       }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -97,7 +101,7 @@ export default function Register() {
           Manage your job applications
         </p>
 
-        <p className="text-sm text-error text-center mt-4 h-5">
+        <p className="text-sm text-error text-center mt-4 w-80 h-10 px-2">
           {message && message}
         </p>
 
@@ -147,8 +151,9 @@ export default function Register() {
           <button
             className="w-full bg-accent p-1.5 rounded-sm mt-5 text-bg-primary focus:outline-accent focus:outline-offset-2"
             type="submit"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? "Registering..." : "Sign Up"}
           </button>
         </form>
         <p className="mt-10 text-center text-sm">
