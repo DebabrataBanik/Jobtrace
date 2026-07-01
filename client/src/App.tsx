@@ -13,6 +13,7 @@ import { userContext } from "./context/routerContext";
 import HydrateFallback from "./components/HydrateFallback";
 import NotFound from "./pages/not-found";
 import Error from "./components/Error";
+import CreateApplication from "./pages/create-application";
 
 const router = createBrowserRouter([
   {
@@ -31,8 +32,12 @@ const router = createBrowserRouter([
         Component: Dashboard,
       },
       {
-        path: "/archived",
+        path: "archived",
         Component: Archived,
+      },
+      {
+        path: "create",
+        Component: CreateApplication,
       },
     ],
   },

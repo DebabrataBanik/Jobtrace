@@ -1,7 +1,9 @@
 import { PlusIcon } from "lucide-react";
 import { SearchIcon } from "lucide-react";
+import { useNavigate } from "react-router";
 
 export default function Header() {
+  const navigate = useNavigate();
   return (
     <header>
       <div className="flex items-center justify-between gap-2 px-4">
@@ -18,7 +20,10 @@ export default function Header() {
               size={15}
             />
           </label>
-          <button className="bg-accent text-accent-subtle w-9 flex items-center justify-center rounded-md hover:bg-accent-hover focus:outline-offset-2 focus:outline-accent">
+          <button
+            onClick={() => navigate("/create")}
+            className="bg-accent text-accent-subtle w-9 flex items-center justify-center rounded-md hover:bg-accent-hover focus:outline-offset-2 focus:outline-accent"
+          >
             <PlusIcon size={18} />
           </button>
         </div>
