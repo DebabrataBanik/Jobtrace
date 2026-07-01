@@ -1,11 +1,15 @@
-import type { Application } from "../types";
+import type { Application, ApplicationData } from "../types";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-async function applicationRequest<T>(endpoint: string): Promise<T> {
+async function applicationRequest<T>(
+  endpoint: string,
+  options: RequestInit = {},
+): Promise<T> {
   try {
     const res = await fetch(`${BASE_URL}/applications${endpoint}`, {
       credentials: "include",
+      ...options,
     });
     if (!res.ok) {
       const err = await res.json();
@@ -27,4 +31,15 @@ async function applicationRequest<T>(endpoint: string): Promise<T> {
 
 export function getApplications() {
   return applicationRequest<Application[]>("/");
+}
+
+export function createApplication(data: ApplicationData) {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  };
+  return applicationRequest<Application>("/", options);
 }

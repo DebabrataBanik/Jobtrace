@@ -1,6 +1,11 @@
-import { useState, type ChangeEvent } from "react";
+import { useState, type ChangeEvent, type SubmitEvent } from "react";
 import type { ApplicationData } from "../types";
 import { useNavigate } from "react-router";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createApplication } from "../services/applicationService";
+import validator from "validator";
+
+type FormError = Partial<ApplicationData>;
 
 export default function CreateApplication() {
   const navigate = useNavigate();
@@ -9,9 +14,33 @@ export default function CreateApplication() {
     title: "",
     url: "",
     appliedDate: "",
-    status: "applied",
+    status: "Applied",
     description: "",
   });
+  const [error, setError] = useState<FormError>({});
+  const [message, setMessage] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
+  const addApplicationMutation = useMutation({
+    mutationFn: createApplication,
+    onSuccess: () => handleSuccessMutation(),
+    onError: (error) => {
+      setMessage(error.message);
+    },
+  });
+
+  function handleSuccessMutation() {
+    queryClient.invalidateQueries({ queryKey: ["applications"] });
+    setFormData({
+      company: "",
+      title: "",
+      url: "",
+      appliedDate: "",
+      status: "Applied",
+      description: "",
+    });
+  }
+
   function handleChange(
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
@@ -20,14 +49,58 @@ export default function CreateApplication() {
       ...prevData,
       [name]: value,
     }));
+
+    setError((prevError) => ({
+      ...prevError,
+      [name]: null,
+    }));
   }
+
+  async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const company = formData.company.trim();
+    const title = formData.title.trim();
+    const { status, appliedDate, url, description } = formData;
+
+    const errors: FormError = {};
+    if (company.length < 2) {
+      errors.company = "Please enter valid company name";
+    }
+    if (title.length === 0) {
+      errors.title = "Please enter job title";
+    }
+    if (appliedDate.length === 0 || !validator.isDate(appliedDate)) {
+      errors.appliedDate = "Please enter application date";
+    }
+    if (url?.trim() && !validator.isURL(url)) {
+      errors.url = "Please enter valid url";
+    }
+
+    setError(errors);
+
+    if (Object.keys(errors).length === 0) {
+      addApplicationMutation.mutate({
+        company,
+        title,
+        url: url?.trim() || undefined,
+        appliedDate,
+        status,
+        description: description.trim(),
+      });
+    }
+  }
+
   return (
     <main className="flex items-center justify-center">
       <div className="bg-bg-primary w-3/4 max-w-200 border border-border rounded-md p-10">
         <h2 className="font-medium text-2xl tracking-wide">
           Enter your application details
         </h2>
-        <form noValidate>
+        <p className="text-center text-sm my-2 text-error">
+          {message && message}
+        </p>
+        <form noValidate onSubmit={handleSubmit}>
           <div className="my-5 flex items-center justify-between gap-5">
             <label className="flex flex-col w-1/2">
               <span className="ml-1 my-1">Company Name</span>
@@ -38,6 +111,7 @@ export default function CreateApplication() {
                 onChange={handleChange}
                 className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary"
               />
+              <span className="form-error">{error && error.company}</span>
             </label>
             <label className="flex flex-col w-1/2">
               <span className="ml-1 my-1">Job Title</span>
@@ -48,10 +122,11 @@ export default function CreateApplication() {
                 onChange={handleChange}
                 className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary"
               />
+              <span className="form-error">{error && error.title}</span>
             </label>
           </div>
-          <div className="my-5 flex items-center gap-5">
-            <label className="flex flex-col w-2/3">
+          <div className="flex items-center gap-5">
+            <label className="flex flex-col w-3/5">
               <span className="ml-1 my-1">Application link</span>
               <input
                 name="url"
@@ -60,8 +135,9 @@ export default function CreateApplication() {
                 onChange={handleChange}
                 className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary"
               />
+              <span className="form-error">{error && error.url}</span>
             </label>
-            <label className="flex flex-col w-1/3">
+            <label className="flex flex-col w-2/5">
               <span className="ml-1 my-1">Date of Apply</span>
               <input
                 name="appliedDate"
@@ -70,6 +146,7 @@ export default function CreateApplication() {
                 onChange={handleChange}
                 className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary"
               />
+              <span className="form-error">{error && error.appliedDate}</span>
             </label>
           </div>
           <div className="my-5 flex flex-col">
@@ -80,9 +157,9 @@ export default function CreateApplication() {
                   type="radio"
                   className="radio-btn"
                   name="status"
-                  value="applied"
+                  value="Applied"
                   onChange={handleChange}
-                  checked={formData.status === "applied"}
+                  checked={formData.status === "Applied"}
                 />
                 <span>Applied</span>
               </label>
@@ -91,9 +168,9 @@ export default function CreateApplication() {
                   type="radio"
                   className="radio-btn"
                   name="status"
-                  value="assessment"
+                  value="OA"
                   onChange={handleChange}
-                  checked={formData.status === "assessment"}
+                  checked={formData.status === "OA"}
                 />
                 <span>Assessment</span>
               </label>
@@ -102,9 +179,9 @@ export default function CreateApplication() {
                   type="radio"
                   className="radio-btn"
                   name="status"
-                  value="interview"
+                  value="Interview"
                   onChange={handleChange}
-                  checked={formData.status === "interview"}
+                  checked={formData.status === "Interview"}
                 />
                 <span>Interview</span>
               </label>
@@ -113,9 +190,9 @@ export default function CreateApplication() {
                   type="radio"
                   className="radio-btn"
                   name="status"
-                  value="offer"
+                  value="Offer"
                   onChange={handleChange}
-                  checked={formData.status === "offer"}
+                  checked={formData.status === "Offer"}
                 />
                 <span>Offer</span>
               </label>
@@ -124,9 +201,9 @@ export default function CreateApplication() {
                   type="radio"
                   className="radio-btn"
                   name="status"
-                  value="rejected"
+                  value="Rejected"
                   onChange={handleChange}
-                  checked={formData.status === "rejected"}
+                  checked={formData.status === "Rejected"}
                 />
                 <span>Rejected</span>
               </label>
@@ -137,11 +214,12 @@ export default function CreateApplication() {
             <textarea
               value={formData.description}
               onChange={handleChange}
-              className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary max-h-40"
+              className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary max-h-30"
               name="description"
             />
+            <span className="form-error">{error && error.description}</span>
           </label>
-          <div className="mt-10 px-1 flex items-center justify-between">
+          <div className="mt-5 px-1 flex items-center justify-between">
             <button
               type="button"
               onClick={() => navigate("/", { replace: true })}

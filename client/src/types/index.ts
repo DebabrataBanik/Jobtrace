@@ -20,8 +20,8 @@ export type ApplicationData = {
   title: string;
   url?: string;
   appliedDate: string;
-  status: "applied" | "assessment" | "interview" | "offer" | "rejected";
-  description?: string;
+  status: "Applied" | "OA" | "Interview" | "Offer" | "Rejected";
+  description: string;
 };
 
 type Timeline = {
