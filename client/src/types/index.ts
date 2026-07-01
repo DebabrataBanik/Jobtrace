@@ -15,6 +15,15 @@ export type LoginUserData = {
   password: string;
 };
 
+export type ApplicationData = {
+  company: string;
+  title: string;
+  url?: string;
+  appliedDate: string;
+  status: "applied" | "assessment" | "interview" | "offer" | "rejected";
+  description?: string;
+};
+
 type Timeline = {
   status: string;
   date: string;

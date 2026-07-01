@@ -34,6 +34,7 @@
     0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
 
   --font-sans: "Clash Display", system-ui, -apple-system, sans-serif;
+  --date-color-scheme: light;
 
   --sidebar-width: 16.25rem;
   --content-max-width: 45rem;
@@ -66,4 +67,6 @@
     0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
   --shadow-lg:
     0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+
+  --date-color-scheme: dark;
 }

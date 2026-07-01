@@ -35,8 +35,6 @@ input[type="search"]::-ms-reveal {
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
-
-  --font-sans: "Clash Display", system-ui, -apple-system, sans-serif;
 }
 
 @layer base {
@@ -66,6 +64,10 @@ input[type="search"]::-ms-reveal {
 
   input[type="checkbox"] {
     @apply absolute opacity-0 w-0 h-0;
+  }
+
+  input[type="date"] {
+    color-scheme: var(--date-color-scheme);
   }
 
   button:disabled {
@@ -118,5 +120,21 @@ input[type="search"]::-ms-reveal {
 
   .checkbox-label:has(.checkbox:checked)::after {
     @apply absolute content-[''] left-1/2 top-[53%] -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[url('./assets/check.svg')] bg-contain bg-no-repeat;
+  }
+  .radio-btn {
+    @apply appearance-none;
+  }
+  .radio-label {
+    @apply text-sm border border-border-subtle p-1 px-4 rounded-full cursor-pointer duration-300 hover:bg-accent-subtle;
+  }
+  .radio-label:has(.radio-btn:checked) {
+    @apply border-accent bg-accent-subtle text-accent;
+  }
+  .radio-label:has(.radio-btn:focus-visible) {
+    @apply outline outline-offset-2 outline-accent;
+  }
+
+  .radio-label:has(.radio-btn:disabled) {
+    @apply opacity-25;
   }
 }
