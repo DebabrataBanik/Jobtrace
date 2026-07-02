@@ -91,6 +91,9 @@ export default function CreateApplication() {
     }
   }
 
+  const today = new Date();
+  const maxDate = today.toISOString().split("T")[0];
+
   return (
     <main className="flex items-center justify-center">
       <div className="bg-bg-primary w-3/4 max-w-200 border border-border rounded-md p-10">
@@ -144,6 +147,7 @@ export default function CreateApplication() {
                 type="date"
                 value={formData.appliedDate}
                 onChange={handleChange}
+                max={maxDate}
                 className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary"
               />
               <span className="form-error">{error && error.appliedDate}</span>
