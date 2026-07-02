@@ -4,15 +4,23 @@ import type { Application } from "../types";
 type ActionMenuProps = {
   data: Application;
   onDelete: (id: string) => void;
+  onVisit: (url: string) => void;
 };
 
-export default function ActionMenu({ data, onDelete }: ActionMenuProps) {
+export default function ActionMenu({
+  data,
+  onDelete,
+  onVisit,
+}: ActionMenuProps) {
   const urlPresent = Boolean(data.url);
   return (
     <div className="absolute z-10 -left-30 rounded-md bg-bg-primary border border-border text-sm flex flex-col w-30">
       <div className="p-1 border-b border-border-subtle flex flex-col items-start gap-1">
         <button
           className="w-full p-1 px-2 rounded-md flex items-center gap-2.5 hover:bg-accent-subtle text-accent"
+          onClick={() => {
+            if (data.url) onVisit(data.url);
+          }}
           disabled={!urlPresent}
         >
           <SquareArrowOutUpRightIcon size={14} />

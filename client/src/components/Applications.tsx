@@ -63,6 +63,11 @@ export default function Applications() {
     setOpenRowId(null);
   }
 
+  function onVisitUrl(url: string) {
+    window.open(url, "_blank", "noreferrer");
+    setOpenRowId(null);
+  }
+
   const columnHelper = createColumnHelper<Application>();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -151,7 +156,11 @@ export default function Applications() {
               <EllipsisVerticalIcon size={14} />
             </button>
             {isMenuOpen && (
-              <ActionMenu data={application} onDelete={onDelete} />
+              <ActionMenu
+                data={application}
+                onDelete={onDelete}
+                onVisit={onVisitUrl}
+              />
             )}
           </div>
         );
