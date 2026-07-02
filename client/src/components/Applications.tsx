@@ -4,7 +4,7 @@ import {
   SearchIcon,
   EllipsisVerticalIcon,
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getApplications } from "../services/applicationService";
 import type { Application } from "../types";
 import { useState } from "react";
@@ -23,6 +23,7 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import ActionMenu from "./ActionMenu";
+import { deleteApplication } from "../services/applicationService";
 
 export default function Applications() {
   const {
@@ -45,6 +46,22 @@ export default function Applications() {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const [openRowId, setOpenRowId] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation({
+    mutationFn: deleteApplication,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["applications"] });
+    },
+    onError: (error) => {
+      console.log(error.message);
+    },
+  });
+
+  function onDelete(id: string) {
+    deleteMutation.mutate(id);
+    setOpenRowId(null);
+  }
 
   const columnHelper = createColumnHelper<Application>();
 
@@ -133,7 +150,9 @@ export default function Applications() {
             >
               <EllipsisVerticalIcon size={14} />
             </button>
-            {isMenuOpen && <ActionMenu data={application} />}
+            {isMenuOpen && (
+              <ActionMenu data={application} onDelete={onDelete} />
+            )}
           </div>
         );
       },

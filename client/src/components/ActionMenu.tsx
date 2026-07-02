@@ -3,9 +3,10 @@ import type { Application } from "../types";
 
 type ActionMenuProps = {
   data: Application;
+  onDelete: (id: string) => void;
 };
 
-export default function ActionMenu({ data }: ActionMenuProps) {
+export default function ActionMenu({ data, onDelete }: ActionMenuProps) {
   const urlPresent = Boolean(data.url);
   return (
     <div className="absolute z-10 -left-30 rounded-md bg-bg-primary border border-border text-sm flex flex-col w-30">
@@ -23,7 +24,10 @@ export default function ActionMenu({ data }: ActionMenuProps) {
         </button>
       </div>
       <div className="p-1">
-        <button className="w-full text-error text-left hover:bg-error-subtle p-1 px-2 rounded-md flex items-center gap-2.5">
+        <button
+          onClick={() => onDelete(data._id)}
+          className="w-full text-error text-left hover:bg-error-subtle p-1 px-2 rounded-md flex items-center gap-2.5"
+        >
           <TrashIcon size={14} />
           Delete
         </button>
