@@ -15,6 +15,9 @@ async function applicationRequest<T>(
       const err = await res.json();
       throw new Error(err.message || "Application request failed.");
     }
+    if (res.status === 204) {
+      return undefined as unknown as T;
+    }
     return res.json() as Promise<T>;
   } catch (error) {
     const isNetworkError =
@@ -42,4 +45,11 @@ export function createApplication(data: ApplicationData) {
     body: JSON.stringify(data),
   };
   return applicationRequest<Application>("/", options);
+}
+
+export function deleteApplication(id: string) {
+  const options = {
+    method: "DELETE",
+  };
+  return applicationRequest<void>(`/${id}`, options);
 }
