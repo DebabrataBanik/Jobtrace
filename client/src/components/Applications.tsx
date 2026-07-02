@@ -1,4 +1,9 @@
-import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  SearchIcon,
+  EllipsisVerticalIcon,
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getApplications } from "../services/applicationService";
 import type { Application } from "../types";
@@ -17,6 +22,7 @@ import {
   type ColumnDef,
   type SortingState,
 } from "@tanstack/react-table";
+import ActionMenu from "./ActionMenu";
 
 export default function Applications() {
   const {
@@ -37,6 +43,8 @@ export default function Applications() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
+
+  const [openRowId, setOpenRowId] = useState<string | null>(null);
 
   const columnHelper = createColumnHelper<Application>();
 
@@ -104,8 +112,33 @@ export default function Applications() {
       enableGlobalFilter: false,
     }),
     columnHelper.accessor("status", {
-      header: "Stage",
+      header: "Status",
       enableGlobalFilter: false,
+    }),
+    columnHelper.display({
+      id: "actions",
+      header: () => null,
+      cell: ({ row }) => {
+        const application = row.original;
+        const isMenuOpen = openRowId === row.id;
+        return (
+          <div className="relative flex justify-center items-center">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenRowId(isMenuOpen ? null : row.id);
+              }}
+              className="p-1.5 rounded-md hover:bg-bg-tertiary text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+              aria-label="Action menu"
+            >
+              <EllipsisVerticalIcon size={14} />
+            </button>
+            {isMenuOpen && <ActionMenu data={application} />}
+          </div>
+        );
+      },
+      enableGlobalFilter: false,
+      enableSorting: false,
     }),
   ];
 
@@ -207,7 +240,7 @@ export default function Applications() {
       {table.getHeaderGroups().map((headerGroup) => (
         <div
           key={headerGroup.id}
-          className="px-4 py-2 bg-bg-secondary shadow-md text-sm grid grid-cols-[40px_1fr_1fr_1fr_1fr_1fr] place-items-center font-medium"
+          className="px-4 py-2 bg-bg-secondary shadow-md text-sm grid grid-cols-[40px_1fr_1fr_1fr_1fr_1fr_40px] place-items-center font-medium"
         >
           {headerGroup.headers.map((header) => {
             const canSort = header.column.getCanSort();
@@ -257,7 +290,7 @@ export default function Applications() {
           table.getRowModel().rows.map((row) => (
             <div
               key={row.id}
-              className={`p-4 text-sm grid grid-cols-[40px_1fr_1fr_1fr_1fr_1fr] place-items-center border-t border-t-border-subtle ${
+              className={`p-4 text-sm grid grid-cols-[40px_1fr_1fr_1fr_1fr_1fr_40px] place-items-center border-t border-t-border-subtle ${
                 row.getIsSelected() ? "bg-accent-subtle" : ""
               }`}
             >
