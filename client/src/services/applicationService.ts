@@ -51,6 +51,23 @@ export function getApplication(id: string) {
   return applicationRequest<Application>(`/${id}`);
 }
 
+export function updateApplication({
+  data,
+  id,
+}: {
+  data: ApplicationFormData;
+  id: string;
+}) {
+  const options = {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  };
+  return applicationRequest<Application>(`/${id}`, options);
+}
+
 export function deleteApplication(id: string) {
   const options = {
     method: "DELETE",

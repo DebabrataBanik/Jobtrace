@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createApplication,
   getApplication,
+  updateApplication,
 } from "../services/applicationService";
 import validator from "validator";
 
@@ -36,6 +37,18 @@ export default function ApplicationForm({ mode }: ApplicationFormProps) {
   const addApplicationMutation = useMutation({
     mutationFn: createApplication,
     onSuccess: () => handleSuccessMutation(),
+    onError: (error) => {
+      setMessage(error.message);
+    },
+  });
+
+  const updateApplicationMutation = useMutation({
+    mutationFn: updateApplication,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["applications"] });
+      queryClient.invalidateQueries({ queryKey: ["application", id] });
+      navigate("/");
+    },
     onError: (error) => {
       setMessage(error.message);
     },
@@ -92,14 +105,26 @@ export default function ApplicationForm({ mode }: ApplicationFormProps) {
     setError(errors);
 
     if (Object.keys(errors).length === 0) {
-      addApplicationMutation.mutate({
-        company,
-        title,
-        url: url?.trim() || undefined,
-        appliedDate,
-        status,
-        description: description.trim(),
-      });
+      if (mode === "create") {
+        addApplicationMutation.mutate({
+          company,
+          title,
+          url: url?.trim() || undefined,
+          appliedDate,
+          status,
+          description: description.trim(),
+        });
+      } else if (mode === "edit" && id) {
+        const data = {
+          company,
+          title,
+          url: url?.trim() || undefined,
+          appliedDate,
+          status,
+          description: description.trim(),
+        };
+        updateApplicationMutation.mutate({ data, id });
+      }
     }
   }
 
