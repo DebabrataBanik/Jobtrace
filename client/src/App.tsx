@@ -14,6 +14,8 @@ import HydrateFallback from "./components/HydrateFallback";
 import NotFound from "./pages/not-found";
 import Error from "./components/Error";
 import ApplicationForm from "./pages/application-form";
+import { queryClient } from "./lib/queryClient";
+import { getApplication } from "./services/applicationService";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +40,22 @@ const router = createBrowserRouter([
       {
         path: "create",
         element: <ApplicationForm mode="create" />,
+      },
+      {
+        path: "/:id/edit",
+        element: <ApplicationForm mode="edit" />,
+        loader: async ({ params }) => {
+          const { id } = params;
+          if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
+            throw new Response("Invalid application id", { status: 400 });
+          }
+          await queryClient.ensureQueryData({
+            queryKey: ["application", id],
+            queryFn: () => getApplication(id),
+          });
+
+          return null;
+        },
       },
     ],
   },

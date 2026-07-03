@@ -47,6 +47,10 @@ export function createApplication(data: ApplicationFormData) {
   return applicationRequest<Application>("/", options);
 }
 
+export function getApplication(id: string) {
+  return applicationRequest<Application>(`/${id}`);
+}
+
 export function deleteApplication(id: string) {
   const options = {
     method: "DELETE",

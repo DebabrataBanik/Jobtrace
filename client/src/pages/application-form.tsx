@@ -1,8 +1,11 @@
 import { useState, type ChangeEvent, type SubmitEvent } from "react";
 import type { ApplicationFormData } from "../types";
-import { useNavigate } from "react-router";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createApplication } from "../services/applicationService";
+import { useNavigate, useParams } from "react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createApplication,
+  getApplication,
+} from "../services/applicationService";
 import validator from "validator";
 
 type FormError = Partial<ApplicationFormData>;
@@ -11,19 +14,25 @@ type ApplicationFormProps = {
 };
 
 export default function ApplicationForm({ mode }: ApplicationFormProps) {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { data } = useQuery({
+    queryKey: ["application", id],
+    queryFn: () => getApplication(id!),
+    enabled: mode === "edit",
+  });
   const [formData, setFormData] = useState<ApplicationFormData>({
-    company: "",
-    title: "",
-    url: "",
-    appliedDate: "",
-    status: "Applied",
-    description: "",
+    company: data?.company || "",
+    title: data?.title || "",
+    url: data?.url || "",
+    appliedDate: data?.appliedDate.split("T")[0] || "",
+    status: data?.status || "Applied",
+    description: data?.description || "",
   });
   const [error, setError] = useState<FormError>({});
   const [message, setMessage] = useState<string | null>(null);
 
-  const queryClient = useQueryClient();
   const addApplicationMutation = useMutation({
     mutationFn: createApplication,
     onSuccess: () => handleSuccessMutation(),
@@ -239,7 +248,9 @@ export default function ApplicationForm({ mode }: ApplicationFormProps) {
               type="submit"
               className="p-2 px-3 text-sm bg-accent rounded-md text-accent-subtle hover:bg-accent-hover"
             >
-              Create Application
+              {mode === "create"
+                ? "Create Application"
+                : mode === "edit" && "Update Application"}
             </button>
           </div>
         </form>
