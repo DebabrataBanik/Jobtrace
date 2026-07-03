@@ -15,7 +15,7 @@ export type LoginUserData = {
   password: string;
 };
 
-export type ApplicationData = {
+export type ApplicationFormData = {
   company: string;
   title: string;
   url?: string;

@@ -13,7 +13,7 @@ import { userContext } from "./context/routerContext";
 import HydrateFallback from "./components/HydrateFallback";
 import NotFound from "./pages/not-found";
 import Error from "./components/Error";
-import CreateApplication from "./pages/create-application";
+import ApplicationForm from "./pages/application-form";
 
 const router = createBrowserRouter([
   {
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
       },
       {
         path: "create",
-        Component: CreateApplication,
+        element: <ApplicationForm mode="create" />,
       },
     ],
   },

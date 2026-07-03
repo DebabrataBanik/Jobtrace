@@ -1,4 +1,4 @@
-import type { Application, ApplicationData } from "../types";
+import type { Application, ApplicationFormData } from "../types";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -36,7 +36,7 @@ export function getApplications() {
   return applicationRequest<Application[]>("/");
 }
 
-export function createApplication(data: ApplicationData) {
+export function createApplication(data: ApplicationFormData) {
   const options = {
     method: "POST",
     headers: {

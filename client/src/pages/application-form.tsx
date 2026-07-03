@@ -1,15 +1,18 @@
 import { useState, type ChangeEvent, type SubmitEvent } from "react";
-import type { ApplicationData } from "../types";
+import type { ApplicationFormData } from "../types";
 import { useNavigate } from "react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createApplication } from "../services/applicationService";
 import validator from "validator";
 
-type FormError = Partial<ApplicationData>;
+type FormError = Partial<ApplicationFormData>;
+type ApplicationFormProps = {
+  mode: "create" | "edit";
+};
 
-export default function CreateApplication() {
+export default function ApplicationForm({ mode }: ApplicationFormProps) {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<ApplicationData>({
+  const [formData, setFormData] = useState<ApplicationFormData>({
     company: "",
     title: "",
     url: "",
@@ -153,66 +156,67 @@ export default function CreateApplication() {
               <span className="form-error">{error && error.appliedDate}</span>
             </label>
           </div>
-          <div className="my-5 flex flex-col">
-            <span className="ml-1 mb-1">Status</span>
-            <div className="w-full flex items-center gap-5">
-              <label className="radio-label">
-                <input
-                  type="radio"
-                  className="radio-btn"
-                  name="status"
-                  value="Applied"
-                  onChange={handleChange}
-                  checked={formData.status === "Applied"}
-                />
-                <span>Applied</span>
-              </label>
-              <label className="radio-label">
-                <input
-                  type="radio"
-                  className="radio-btn"
-                  name="status"
-                  value="OA"
-                  onChange={handleChange}
-                  checked={formData.status === "OA"}
-                />
-                <span>Assessment</span>
-              </label>
-              <label className="radio-label">
-                <input
-                  type="radio"
-                  className="radio-btn"
-                  name="status"
-                  value="Interview"
-                  onChange={handleChange}
-                  checked={formData.status === "Interview"}
-                />
-                <span>Interview</span>
-              </label>
-              <label className="radio-label">
-                <input
-                  type="radio"
-                  className="radio-btn"
-                  name="status"
-                  value="Offer"
-                  onChange={handleChange}
-                  checked={formData.status === "Offer"}
-                />
-                <span>Offer</span>
-              </label>
-              <label className="radio-label">
-                <input
-                  type="radio"
-                  className="radio-btn"
-                  name="status"
-                  value="Rejected"
-                  onChange={handleChange}
-                  checked={formData.status === "Rejected"}
-                />
-                <span>Rejected</span>
-              </label>
+          {mode === "create" ? (
+            <div className="my-5">
+              <span className="ml-1 mb-1 block">Status</span>
+              <span className="radio-label border-accent bg-accent-subtle text-accent inline-block">
+                Applied
+              </span>
             </div>
-          </div>
+          ) : (
+            mode === "edit" && (
+              <div className="my-5 flex flex-col">
+                <span className="ml-1 mb-1">Status</span>
+                <div className="w-full flex items-center gap-5">
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      className="radio-btn"
+                      name="status"
+                      value="OA"
+                      onChange={handleChange}
+                      checked={formData.status === "OA"}
+                    />
+                    <span>Assessment</span>
+                  </label>
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      className="radio-btn"
+                      name="status"
+                      value="Interview"
+                      onChange={handleChange}
+                      checked={formData.status === "Interview"}
+                    />
+                    <span>Interview</span>
+                  </label>
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      className="radio-btn"
+                      name="status"
+                      value="Offer"
+                      onChange={handleChange}
+                      checked={formData.status === "Offer"}
+                    />
+                    <span>Offer</span>
+                  </label>
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      className="radio-btn"
+                      name="status"
+                      value="Rejected"
+                      onChange={handleChange}
+                      checked={formData.status === "Rejected"}
+                    />
+                    <span>Rejected</span>
+                  </label>
+                </div>
+              </div>
+            )
+          )}
+
           <label className="flex flex-col">
             <span className="ml-1 my-1">Job Description</span>
             <textarea
