@@ -47,9 +47,6 @@ export async function updateApplication(
   const { status } = data;
 
   if (status) {
-    if (status === 'Applied') {
-      throw new ApiError(400, 'Applied status can only be set once on creation');
-    }
     if (TERMINAL_STATES.includes(document.status)) {
       throw new ApiError(400, 'Application is already closed');
     }
