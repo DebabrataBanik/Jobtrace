@@ -1,4 +1,8 @@
-import type { Application, ApplicationFormData } from "../types";
+import type {
+  Application,
+  ApplicationFormData,
+  UpdateApplicationPayload,
+} from "../types";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -52,10 +56,10 @@ export function getApplication(id: string) {
 }
 
 export function updateApplication({
-  data,
+  payload,
   id,
 }: {
-  data: ApplicationFormData;
+  payload: UpdateApplicationPayload;
   id: string;
 }) {
   const options = {
@@ -63,7 +67,7 @@ export function updateApplication({
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   };
   return applicationRequest<Application>(`/${id}`, options);
 }

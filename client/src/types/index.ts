@@ -24,6 +24,10 @@ export type ApplicationFormData = {
   description: string;
 };
 
+export type UpdateApplicationPayload = Omit<ApplicationFormData, "status"> & {
+  status?: "OA" | "Interview" | "Offer" | "Rejected";
+};
+
 type Timeline = {
   status: string;
   date: string;

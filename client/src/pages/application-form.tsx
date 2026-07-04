@@ -115,15 +115,15 @@ export default function ApplicationForm({ mode }: ApplicationFormProps) {
           description: description.trim(),
         });
       } else if (mode === "edit" && id) {
-        const data = {
+        const payload = {
           company,
           title,
           url: url?.trim() || undefined,
           appliedDate,
-          status,
+          status: status !== "Applied" && data?.status ? status : undefined,
           description: description.trim(),
         };
-        updateApplicationMutation.mutate({ data, id });
+        updateApplicationMutation.mutate({ payload, id });
       }
     }
   }
