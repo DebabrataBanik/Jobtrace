@@ -24,8 +24,10 @@ import {
 import ActionMenu from "./ActionMenu";
 import { deleteApplication } from "../services/applicationService";
 import { usePagination } from "../hooks/usePagination";
+import { useNavigate } from "react-router";
 
 export default function Applications() {
+  const navigate = useNavigate();
   const {
     data = [],
     error,
@@ -344,7 +346,10 @@ export default function Applications() {
             <span className="text-text-secondary">
               Try adding a new application
             </span>
-            <button className="px-4 py-2 rounded-md bg-accent hover:bg-accent-hover text-bg-primary">
+            <button
+              onClick={() => navigate("/create")}
+              className="px-4 py-2 rounded-md bg-accent hover:bg-accent-hover text-bg-primary"
+            >
               Add application
             </button>
           </div>
