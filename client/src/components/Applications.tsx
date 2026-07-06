@@ -18,12 +18,12 @@ import {
   flexRender,
   type ColumnFiltersState,
   type RowSelectionState,
-  type PaginationState,
   type ColumnDef,
   type SortingState,
 } from "@tanstack/react-table";
 import ActionMenu from "./ActionMenu";
 import { deleteApplication } from "../services/applicationService";
+import { usePagination } from "../hooks/usePagination";
 
 export default function Applications() {
   const {
@@ -37,10 +37,7 @@ export default function Applications() {
   });
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 7,
-  });
+  const { pagination, setPagination } = usePagination();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -360,7 +357,7 @@ export default function Applications() {
         )}
       </div>
 
-      {table.getFilteredRowModel().rows.length > 7 && (
+      {table.getFilteredRowModel().rows.length > pagination.pageSize && (
         <div className="p-2 px-7 border-t border-t-border-subtle flex items-center justify-between text-sm">
           <span className="text-text-secondary">
             Page {table.getState().pagination.pageIndex + 1} of{" "}
