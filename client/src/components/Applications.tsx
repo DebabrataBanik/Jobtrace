@@ -207,7 +207,7 @@ export default function Applications() {
 
   return (
     <div className="rounded-md bg-bg-primary relative border border-border">
-      <div className="p-4 border-b border-b-border-subtle flex justify-between items-center gap-4">
+      <div className="p-3.5 border-b border-b-border-subtle flex justify-between items-center gap-4">
         <div className="p-1 w-fit rounded-md bg-bg-tertiary flex items-center gap-2">
           <button
             onClick={() => setColumnFilters([])}
@@ -349,7 +349,7 @@ export default function Applications() {
       </div>
 
       {table.getFilteredRowModel().rows.length > 7 && (
-        <div className="p-4 px-7 border-t border-t-border-subtle flex items-center justify-between text-sm">
+        <div className="p-2 px-7 border-t border-t-border-subtle flex items-center justify-between text-sm">
           <span className="text-text-secondary">
             Page {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}

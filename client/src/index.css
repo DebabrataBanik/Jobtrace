@@ -47,7 +47,7 @@ input[type="search"]::-ms-reveal {
   }
 
   aside {
-    @apply flex flex-col p-4 min-w-65 border-r border-r-border h-screen bg-bg-primary;
+    @apply flex flex-col p-4 min-w-65 border-r border-r-border min-h-screen bg-bg-primary;
   }
 
   button {
@@ -71,7 +71,7 @@ input[type="search"]::-ms-reveal {
   }
 
   button:disabled {
-    @apply cursor-not-allowed pointer-events-none opacity-50;
+    @apply cursor-not-allowed pointer-events-none opacity-50 select-none;
   }
 }
 
@@ -135,6 +135,6 @@ input[type="search"]::-ms-reveal {
   }
 
   .radio-label:has(.radio-btn:disabled) {
-    @apply opacity-25;
+    @apply opacity-25 pointer-events-none select-none;
   }
 }

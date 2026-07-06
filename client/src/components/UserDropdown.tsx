@@ -22,7 +22,7 @@ export default function UserDropdown() {
   }
 
   return (
-    <div className="absolute z-10 bg-bg-primary bottom-0 -right-40 border border-border-subtle rounded-lg w-35">
+    <div className="absolute z-10 bg-bg-primary -top-28 left-28 border border-border-subtle rounded-lg w-35">
       <div className="flex flex-col py-2">
         <button className="user_dropdown-item hover:bg-bg-secondary">
           <UserIcon size={15} />
@@ -36,7 +36,7 @@ export default function UserDropdown() {
           Theme
         </button>
       </div>
-      <div className="flex py-1 border-t border-t-border">
+      <div className="flex py-1 border-t border-t-border-subtle">
         <button
           onClick={logout}
           className="w-full user_dropdown-item hover:bg-error-subtle text-error"

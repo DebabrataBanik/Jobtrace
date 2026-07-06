@@ -9,7 +9,7 @@ export default function UserItem() {
   const [showUserDropdown, setShowUserDropdown] = useState<boolean>(false);
 
   return (
-    <div className="relative border-t border-t-border pt-3 mt-auto">
+    <div className="border-t border-t-border pt-3 mt-auto sticky bottom-4">
       <button
         onClick={() => setShowUserDropdown((prev) => !prev)}
         className="group w-full flex items-center p-2 gap-2 hover:bg-accent-subtle rounded-sm duration-300"
