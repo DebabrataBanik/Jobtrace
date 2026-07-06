@@ -50,11 +50,23 @@ export default function Applications() {
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: deleteApplication,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["applications"] });
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["applications"] });
+      const previousApplications = queryClient.getQueryData(["applications"]);
+      queryClient.setQueryData(["applications"], (old: Application[]) =>
+        old.filter((app: Application) => app._id !== id),
+      );
+      return { previousApplications };
     },
-    onError: (error) => {
+    onError: (error, _id, onMutateResult) => {
+      queryClient.setQueryData(
+        ["applications"],
+        onMutateResult?.previousApplications,
+      );
       console.log(error.message);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["applications"] });
     },
   });
 
