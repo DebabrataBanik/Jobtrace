@@ -5,7 +5,7 @@ import {
   EllipsisVerticalIcon,
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getApplications } from "../services/applicationService";
+import { getApplications } from "../services/application.service";
 import type { Application } from "../types";
 import { useState } from "react";
 import {
@@ -22,7 +22,7 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import ActionMenu from "./ActionMenu";
-import { deleteApplication } from "../services/applicationService";
+import { deleteApplication } from "../services/application.service";
 import { usePagination } from "../hooks/usePagination";
 import { useNavigate } from "react-router";
 

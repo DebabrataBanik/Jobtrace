@@ -6,7 +6,7 @@ import {
   createApplication,
   getApplication,
   updateApplication,
-} from "../services/applicationService";
+} from "../services/application.service";
 import validator from "validator";
 
 type FormError = Partial<ApplicationFormData>;

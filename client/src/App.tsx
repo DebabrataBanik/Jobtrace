@@ -15,9 +15,9 @@ import NotFound from "./pages/not-found";
 import Error from "./components/Error";
 import ApplicationForm from "./pages/application-form";
 import { queryClient } from "./lib/queryClient";
-import { getApplication } from "./services/applicationService";
+import { getApplication } from "./services/application.service";
 import Profile from "./pages/profile";
-import { getUserProfile } from "./services/authService";
+import { getUserProfile } from "./services/auth.service";
 
 const router = createBrowserRouter([
   {

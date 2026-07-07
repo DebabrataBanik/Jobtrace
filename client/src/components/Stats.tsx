@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getApplications } from "../services/applicationService";
+import { getApplications } from "../services/application.service";
 
 export default function Stats() {
   const {

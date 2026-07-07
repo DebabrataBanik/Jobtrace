@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent } from "react";
 import type { UserFormData } from "../types";
 import { useQuery } from "@tanstack/react-query";
-import { getUserProfile } from "../services/authService";
+import { getUserProfile } from "../services/auth.service";
 
 export default function Profile() {
   const { data } = useQuery({
