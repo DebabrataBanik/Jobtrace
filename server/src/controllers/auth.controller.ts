@@ -1,5 +1,10 @@
 import { Request, Response } from 'express';
-import { findUser, loginUser, registerUser } from '../services/auth.service.js';
+import {
+  findUser,
+  getUserProfileData,
+  loginUser,
+  registerUser,
+} from '../services/auth.service.js';
 
 export async function register(req: Request, res: Response) {
   const { token, user } = await registerUser(req.body);
@@ -53,4 +58,10 @@ export function logout(_req: Request, res: Response) {
   });
 
   res.json({ message: 'Logged out successfully' });
+}
+
+export async function getProfile(req: Request, res: Response) {
+  const userId = req.user?.userId;
+  const profile = await getUserProfileData(userId as string);
+  res.json(profile);
 }
