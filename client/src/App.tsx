@@ -16,6 +16,8 @@ import Error from "./components/Error";
 import ApplicationForm from "./pages/application-form";
 import { queryClient } from "./lib/queryClient";
 import { getApplication } from "./services/applicationService";
+import Profile from "./pages/profile";
+import { getUserProfile } from "./services/authService";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +56,17 @@ const router = createBrowserRouter([
             queryFn: () => getApplication(id),
           });
 
+          return null;
+        },
+      },
+      {
+        path: "profile",
+        Component: Profile,
+        loader: async () => {
+          await queryClient.ensureQueryData({
+            queryKey: ["profile"],
+            queryFn: getUserProfile,
+          });
           return null;
         },
       },

@@ -24,7 +24,10 @@ export default function UserDropdown() {
   return (
     <div className="absolute z-10 bg-bg-primary -top-28 left-28 border border-border-subtle rounded-lg w-35">
       <div className="flex flex-col py-2">
-        <button className="user_dropdown-item hover:bg-bg-secondary">
+        <button
+          onClick={() => navigate("/profile")}
+          className="user_dropdown-item hover:bg-bg-secondary"
+        >
           <UserIcon size={15} />
           Profile
         </button>

@@ -48,3 +48,9 @@ export type Application = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type UserFormData = {
+  username: string;
+  email: string;
+  about: string;
+};

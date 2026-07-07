@@ -15,6 +15,18 @@ export async function getUser() {
   return res.json();
 }
 
+export async function getUserProfile() {
+  const res = await fetch(`${BASE_URL}/auth/profile`, {
+    credentials: "include",
+  });
+  if (res.status == 401) return null;
+
+  if (!res.ok) {
+    throw new Error(`Server error: ${res.status}`);
+  }
+  return res.json();
+}
+
 export async function registerUser(data: RegisterUserData) {
   const abortController = new AbortController();
   const timeout = setTimeout(() => abortController.abort(), 5000);
