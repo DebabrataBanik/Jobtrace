@@ -149,7 +149,7 @@ export default function ApplicationForm({ mode }: ApplicationFormProps) {
                 type="text"
                 value={formData.company}
                 onChange={handleChange}
-                className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary"
+                className="input"
               />
               <span className="form-error">{error && error.company}</span>
             </label>
@@ -160,7 +160,7 @@ export default function ApplicationForm({ mode }: ApplicationFormProps) {
                 type="text"
                 value={formData.title}
                 onChange={handleChange}
-                className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary"
+                className="input"
               />
               <span className="form-error">{error && error.title}</span>
             </label>
@@ -173,7 +173,7 @@ export default function ApplicationForm({ mode }: ApplicationFormProps) {
                 type="text"
                 value={formData.url}
                 onChange={handleChange}
-                className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary"
+                className="input"
               />
               <span className="form-error">{error && error.url}</span>
             </label>
@@ -185,7 +185,7 @@ export default function ApplicationForm({ mode }: ApplicationFormProps) {
                 value={formData.appliedDate}
                 onChange={handleChange}
                 max={maxDate}
-                className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary"
+                className="input"
               />
               <span className="form-error">{error && error.appliedDate}</span>
             </label>
@@ -256,7 +256,7 @@ export default function ApplicationForm({ mode }: ApplicationFormProps) {
             <textarea
               value={formData.description}
               onChange={handleChange}
-              className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary max-h-30"
+              className="input max-h-30"
               name="description"
             />
             <span className="form-error">{error && error.description}</span>
@@ -265,14 +265,11 @@ export default function ApplicationForm({ mode }: ApplicationFormProps) {
             <button
               type="button"
               onClick={() => navigate("/", { replace: true })}
-              className="p-2 px-3 text-sm bg-accent rounded-md text-accent-subtle hover:bg-accent-hover"
+              className="form-btn"
             >
               Go Back
             </button>
-            <button
-              type="submit"
-              className="p-2 px-3 text-sm bg-accent rounded-md text-accent-subtle hover:bg-accent-hover"
-            >
+            <button type="submit" className="form-btn">
               {mode === "create"
                 ? "Create Application"
                 : mode === "edit" && "Update Application"}

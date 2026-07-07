@@ -38,7 +38,7 @@ export default function Profile() {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary"
+                className="input"
                 type="text"
               />
             </label>
@@ -48,7 +48,7 @@ export default function Profile() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary"
+                className="input"
                 type="email"
               />
             </label>
@@ -58,7 +58,7 @@ export default function Profile() {
             <textarea
               value={formData.about}
               onChange={handleChange}
-              className="px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary max-h-40"
+              className="input max-h-40"
               name="about"
             />
           </label>

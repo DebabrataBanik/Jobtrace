@@ -109,18 +109,16 @@ input[type="search"]::-ms-reveal {
   .checkbox-label {
     @apply block relative w-4.5 h-4.5 border-2 border-border rounded-md cursor-pointer;
   }
-
   .checkbox-label:has(.checkbox:checked) {
     @apply bg-accent border-accent;
   }
-
   .checkbox-label:has(.checkbox:focus) {
     @apply border-accent;
   }
-
   .checkbox-label:has(.checkbox:checked)::after {
     @apply absolute content-[''] left-1/2 top-[53%] -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-[url('./assets/check.svg')] bg-contain bg-no-repeat;
   }
+
   .radio-btn {
     @apply appearance-none;
   }
@@ -133,8 +131,14 @@ input[type="search"]::-ms-reveal {
   .radio-label:has(.radio-btn:focus-visible) {
     @apply outline outline-offset-2 outline-accent;
   }
-
   .radio-label:has(.radio-btn:disabled) {
     @apply opacity-25 pointer-events-none select-none;
+  }
+
+  .input {
+    @apply px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary;
+  }
+  .form-btn {
+    @apply p-2 px-3 text-sm bg-accent rounded-md text-accent-subtle hover:bg-accent-hover font-medium tracking-wide;
   }
 }
