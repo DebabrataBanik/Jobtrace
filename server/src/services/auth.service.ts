@@ -12,7 +12,7 @@ export async function registerUser(data: RegisterInput) {
 
   const hashedPw = await bcrypt.hash(data.password, 10);
   const newUser = await User.create({
-    name: data.username,
+    name: data.name,
     email: data.email,
     password: hashedPw,
   });
