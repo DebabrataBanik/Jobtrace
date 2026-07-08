@@ -4,6 +4,7 @@ import {
   getUserProfileData,
   loginUser,
   registerUser,
+  updateProfileData,
 } from '../services/auth.service.js';
 
 export async function register(req: Request, res: Response) {
@@ -61,7 +62,13 @@ export function logout(_req: Request, res: Response) {
 }
 
 export async function getProfile(req: Request, res: Response) {
-  const userId = req.user?.userId;
-  const profile = await getUserProfileData(userId as string);
-  res.json(profile);
+  const userId = req.user!.userId;
+  const user = await getUserProfileData(userId);
+  res.json(user);
+}
+
+export async function updateProfile(req: Request, res: Response) {
+  const userId = req.user!.userId;
+  const user = await updateProfileData(userId, req.body);
+  res.json(user);
 }
