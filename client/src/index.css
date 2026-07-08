@@ -136,7 +136,7 @@ input[type="search"]::-ms-reveal {
   }
 
   .input {
-    @apply px-2 py-1 border border-border-subtle rounded-md focus:outline focus:outline-text-tertiary;
+    @apply px-2 py-1 border-2 border-border-subtle hover:border-border rounded-md focus:outline focus:outline-text-tertiary;
   }
   .form-btn {
     @apply p-2 px-3 text-sm bg-accent rounded-md text-accent-subtle hover:bg-accent-hover font-medium tracking-wide;

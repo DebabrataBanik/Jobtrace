@@ -50,7 +50,6 @@ export type Application = {
 };
 
 export type UserFormData = {
-  username: string;
-  email: string;
+  name: string;
   about: string;
 };

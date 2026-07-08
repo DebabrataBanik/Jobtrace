@@ -1,4 +1,4 @@
-import type { RegisterUserData, LoginUserData } from "../types";
+import type { RegisterUserData, LoginUserData, UserFormData } from "../types";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -83,4 +83,16 @@ export async function loginUser(data: LoginUserData) {
   } finally {
     clearTimeout(timeout);
   }
+}
+
+export async function updateProfile(data: UserFormData) {
+  const res = await fetch(`${BASE_URL}/auth/profile`, {
+    credentials: "include",
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  return res.json();
 }
