@@ -5,7 +5,7 @@ export type User = {
 };
 
 export type RegisterUserData = {
-  username: string;
+  name: string;
   email: string;
   password: string;
 };

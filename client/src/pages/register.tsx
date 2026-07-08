@@ -10,7 +10,7 @@ type FormError = Partial<RegisterUserData>;
 export default function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<RegisterUserData>({
-    username: "",
+    name: "",
     email: "",
     password: "",
   });
@@ -64,10 +64,10 @@ export default function Register() {
     e.preventDefault();
 
     const error: FormError = {};
-    const { username, email, password } = formData;
+    const { name, email, password } = formData;
 
-    if (username.trim().length === 0) {
-      error.username = "Please enter a username";
+    if (name.trim().length === 0) {
+      error.name = "Please enter a username";
     }
     if (!email.trim() || !emailRegex.test(email.trim())) {
       error.email = "Please enter a valid email address";
@@ -79,12 +79,12 @@ export default function Register() {
 
     if (Object.values(error).length === 0) {
       await register({
-        username: username.trim(),
+        name: name.trim(),
         email: email.trim(),
         password,
       });
       setFormData({
-        username: "",
+        name: "",
         email: "",
         password: "",
       });
@@ -115,13 +115,11 @@ export default function Register() {
             <input
               type="text"
               name="username"
-              value={formData.username}
+              value={formData.name}
               onChange={handleChange}
               className="form-input"
             />
-            <span className="form-error">
-              {formError && formError.username}
-            </span>
+            <span className="form-error">{formError && formError.name}</span>
           </label>
           <label>
             <span className="pl-1 text-sm">Email Address</span>
