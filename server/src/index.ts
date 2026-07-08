@@ -48,6 +48,7 @@ app.use((_req, res) => {
 });
 
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  if (process.env.NODE_ENV === 'development') console.info(err);
   if (err instanceof errors.JOSEError) {
     return res.status(401).json({ message: 'Invalid or token expired' });
   }
