@@ -17,12 +17,14 @@ export default function Profile() {
   });
   const [formError, setFormError] = useState<FormError>({});
   const [message, setMessage] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   const queryClient = useQueryClient();
   const profileUpdateMutation = useMutation({
     mutationFn: updateProfile,
     onSuccess: (user) => {
       queryClient.setQueryData(["profile"], user);
+      setIsEditing(false);
     },
     onError: (error) => setMessage(error.message),
   });
@@ -39,18 +41,23 @@ export default function Profile() {
 
   function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (!isEditing) {
+      setIsEditing(true);
+      return;
+    }
     const name = formData.name.trim();
     const about = formData.about.trim();
 
     const errors: FormError = {};
-    if (name.length < 2) {
+    if (name.length <= 2) {
       errors.name = "Username must be longer that 2 characters";
     }
     if (about.length >= 500) {
       errors.about = "Cannot exceed 500 characters.";
     }
 
-    setFormError(formError);
+    setFormError(errors);
 
     if (Object.keys(errors).length === 0) {
       profileUpdateMutation.mutate({
@@ -59,6 +66,7 @@ export default function Profile() {
       });
     }
   }
+
   return (
     <main className="flex itesm-center justify-center">
       <div className="bg-bg-primary w-3/4 max-w-200 border border-border rounded-md p-10">
@@ -78,6 +86,7 @@ export default function Profile() {
                 onChange={handleChange}
                 className="input"
                 type="text"
+                disabled={!isEditing}
               />
               <span className="form-error">{formError && formError.name}</span>
             </label>
@@ -88,10 +97,10 @@ export default function Profile() {
                 value={data.email}
                 className="input"
                 type="email"
-                readOnly
+                disabled
               />
-              <span className="text-xs ml-1 text-text-tertiary">
-                Email cannot be modified
+              <span className="form-error text-text-tertiary">
+                {isEditing && "Email cannot be modified"}
               </span>
             </label>
           </div>
@@ -100,14 +109,24 @@ export default function Profile() {
             <textarea
               value={formData.about}
               onChange={handleChange}
-              className="input max-h-40"
+              className={`input max-h-40 overflow-hidden field-sizing-content ${!isEditing ? "resize-none" : ""}`}
               name="about"
+              disabled={!isEditing}
             />
             <span className="form-error">{formError && formError.about}</span>
           </label>
           <div className="flex mt-10 mx-2">
+            {isEditing && (
+              <button
+                className="form-btn"
+                type="button"
+                onClick={() => setIsEditing(false)}
+              >
+                Cancel
+              </button>
+            )}
             <button type="submit" className="form-btn ml-auto">
-              Save Profile
+              {isEditing ? "Save Profile" : "Make Changes"}
             </button>
           </div>
         </form>
