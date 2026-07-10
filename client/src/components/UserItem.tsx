@@ -1,11 +1,14 @@
 import { ChevronRightIcon } from "lucide-react";
-import { useLoaderData } from "react-router";
 import UserDropdown from "./UserDropdown";
 import { useState } from "react";
-import type { User } from "../types";
+import { useQuery } from "@tanstack/react-query";
+import { getUser } from "../services/auth.service";
 
 export default function UserItem() {
-  const user = useLoaderData() as User | null;
+  const { data: user } = useQuery({
+    queryKey: ["auth"],
+    queryFn: getUser,
+  });
   const [showUserDropdown, setShowUserDropdown] = useState<boolean>(false);
 
   return (

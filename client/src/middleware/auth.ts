@@ -1,17 +1,22 @@
 import { redirect, type MiddlewareFunction } from "react-router";
-import { userContext } from "../context/routerContext";
 import { getUser } from "../services/auth.service";
+import { queryClient } from "../lib/queryClient";
 
-export const authMiddleware: MiddlewareFunction = async ({ context }) => {
-  const user = await getUser();
+export const authMiddleware: MiddlewareFunction = async () => {
+  const user = await queryClient.ensureQueryData({
+    queryKey: ["auth"],
+    queryFn: getUser,
+  });
   if (!user) {
     throw redirect("/login");
   }
-  context.set(userContext, user);
 };
 
 export const guestMiddleware: MiddlewareFunction = async () => {
-  const user = await getUser();
+  const user = await queryClient.ensureQueryData({
+    queryKey: ["auth"],
+    queryFn: getUser,
+  });
   if (user) {
     return redirect("/");
   }

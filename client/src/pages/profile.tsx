@@ -38,6 +38,7 @@ export default function Profile() {
     mutationFn: updateProfile,
     onSuccess: (user) => {
       queryClient.setQueryData(["profile"], user);
+      queryClient.setQueryData(["auth"], user);
       setIsEditing(false);
     },
     onError: (error) => setMessage(error.message),
@@ -173,7 +174,7 @@ export default function Profile() {
             <textarea
               value={formData.about}
               onChange={handleChange}
-              className={`input max-h-40 overflow-hidden field-sizing-content ${!isEditing ? "resize-none" : ""}`}
+              className={`input min-h-9 max-h-40 overflow-hidden field-sizing-content ${!isEditing ? "resize-none" : ""}`}
               name="about"
               disabled={!isEditing}
             />
