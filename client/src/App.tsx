@@ -17,7 +17,7 @@ import ApplicationForm from "./pages/application-form";
 import { queryClient } from "./lib/queryClient";
 import { getApplication } from "./services/application.service";
 import Profile from "./pages/profile";
-import { getUserProfile } from "./services/auth.service";
+import { getUserProfile } from "./services/user.service";
 
 const router = createBrowserRouter([
   {

@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type SubmitEvent } from "react";
 import type { UserFormData } from "../types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUserProfile, updateProfile } from "../services/auth.service";
+import { getUserProfile, updateProfile } from "../services/user.service";
 
 type FormError = Partial<UserFormData>;
 
