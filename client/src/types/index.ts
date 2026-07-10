@@ -2,6 +2,8 @@ export type User = {
   id: string;
   name: string;
   email: string;
+  about: string;
+  imageUrl: string;
 };
 
 export type RegisterUserData = {
