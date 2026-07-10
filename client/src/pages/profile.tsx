@@ -107,6 +107,14 @@ export default function Profile() {
     });
   }
 
+  function handleEditCancel() {
+    setIsEditing(false);
+    setFormData({
+      name: data?.name || "",
+      about: data?.about || "",
+    });
+  }
+
   return (
     <main className="flex itesm-center justify-center">
       <div className="bg-bg-primary w-3/4 max-w-200 border border-border rounded-md p-10">
@@ -150,7 +158,7 @@ export default function Profile() {
               <span className="ml-1 my-1">Email</span>
               <input
                 name="email"
-                value={data.email}
+                value={data?.email || ""}
                 className="input"
                 type="email"
                 disabled
@@ -176,7 +184,7 @@ export default function Profile() {
               <button
                 className="form-btn"
                 type="button"
-                onClick={() => setIsEditing(false)}
+                onClick={handleEditCancel}
               >
                 Cancel
               </button>
