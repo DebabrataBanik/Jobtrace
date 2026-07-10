@@ -7,7 +7,6 @@ import {
   uploadProfileImage,
 } from "../services/user.service";
 import MaleCartoon from "/avatar/3d male cartoon.jpg";
-import FemaleCartoon from "/avatar/3d female cartoon.jpg";
 
 type FormError = Partial<UserFormData>;
 
@@ -25,6 +24,14 @@ export default function Profile() {
   const [message, setMessage] = useState<string | null>("");
   const [isEditing, setIsEditing] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string>(data?.imageUrl || "");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMessage(null);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [message]);
 
   const queryClient = useQueryClient();
   const profileUpdateMutation = useMutation({
