@@ -13,6 +13,7 @@ import { applicationLimiter, applicationThrottle } from './middlewares/rateLimit
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import { noCacheMiddleware } from './middlewares/request.middleware.js';
+import { userRouter } from './routes/user.router.js';
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use(express.json({ limit: '20kb' }));
 await connectDB();
 
 app.use('/auth', noCacheMiddleware, authRouter);
+app.use('/user', noCacheMiddleware, userRouter);
 app.use(
   '/applications',
   noCacheMiddleware,

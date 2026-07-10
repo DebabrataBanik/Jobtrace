@@ -1,11 +1,5 @@
 import { Request, Response } from 'express';
-import {
-  findUser,
-  getUserProfileData,
-  loginUser,
-  registerUser,
-  updateProfileData,
-} from '../services/auth.service.js';
+import { findUser, loginUser, registerUser } from '../services/auth.service.js';
 
 export async function register(req: Request, res: Response) {
   const { token, user } = await registerUser(req.body);
@@ -59,16 +53,4 @@ export function logout(_req: Request, res: Response) {
   });
 
   res.json({ message: 'Logged out successfully' });
-}
-
-export async function getProfile(req: Request, res: Response) {
-  const userId = req.user!.userId;
-  const user = await getUserProfileData(userId);
-  res.json(user);
-}
-
-export async function updateProfile(req: Request, res: Response) {
-  const userId = req.user!.userId;
-  const user = await updateProfileData(userId, req.body);
-  res.json(user);
 }
