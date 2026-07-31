@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import type { RegisterUserData } from "../types";
 import { registerUser } from "../services/auth.service";
+import { useQueryClient } from "@tanstack/react-query";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -9,6 +10,7 @@ type FormError = Partial<RegisterUserData>;
 
 export default function Register() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState<RegisterUserData>({
     name: "",
     email: "",
@@ -43,6 +45,7 @@ export default function Register() {
     try {
       setLoading(true);
       await registerUser(registerData);
+      queryClient.removeQueries({ queryKey: ["auth"] });
       navigate("/", { replace: true });
     } catch (error) {
       console.log(error);

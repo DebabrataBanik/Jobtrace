@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import type { LoginUserData } from "../types";
 import { loginUser } from "../services/auth.service";
+import { useQueryClient } from "@tanstack/react-query";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -9,6 +10,7 @@ type FormError = Partial<LoginUserData>;
 
 export default function Login() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState<LoginUserData>({
     email: "",
     password: "",
@@ -42,6 +44,7 @@ export default function Login() {
     try {
       setLoading(true);
       await loginUser(loginData);
+      queryClient.removeQueries({ queryKey: ["auth"] });
       navigate("/", { replace: true });
     } catch (error) {
       console.log(error);
