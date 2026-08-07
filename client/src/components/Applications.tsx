@@ -7,7 +7,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getApplications } from "../services/application.service";
 import type { Application } from "../types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   createColumnHelper,
   useReactTable,
@@ -43,8 +43,15 @@ export default function Applications() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
-
   const [openRowId, setOpenRowId] = useState<string | null>(null);
+
+  useEffect(() => {
+    function closeActionMenu() {
+      setOpenRowId(null);
+    }
+    document.addEventListener("click", closeActionMenu);
+    return () => document.removeEventListener("click", closeActionMenu);
+  }, []);
 
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
