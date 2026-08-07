@@ -22,6 +22,7 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import ActionMenu from "./ActionMenu";
+import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
 import { deleteApplication } from "../services/application.service";
 import { usePagination } from "../hooks/usePagination";
 import { useNavigate } from "react-router";
@@ -44,6 +45,8 @@ export default function Applications() {
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [openRowId, setOpenRowId] = useState<string | null>(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
+  const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
 
   useEffect(() => {
     function closeActionMenu() {
@@ -79,11 +82,18 @@ export default function Applications() {
   function onDelete(id: string) {
     deleteMutation.mutate(id);
     setOpenRowId(null);
+    setOpenDeleteDialog(false);
+    setSelectedRowId(null);
   }
 
   function onVisitUrl(url: string) {
     window.open(url, "_blank", "noreferrer");
     setOpenRowId(null);
+  }
+
+  function closeDeleteDialog() {
+    setSelectedRowId(null);
+    setOpenDeleteDialog(false);
   }
 
   const columnHelper = createColumnHelper<Application>();
@@ -167,6 +177,7 @@ export default function Applications() {
               onClick={(e) => {
                 e.stopPropagation();
                 setOpenRowId(isMenuOpen ? null : row.id);
+                setSelectedRowId(application._id);
               }}
               className="p-1.5 rounded-md hover:bg-bg-tertiary text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
               aria-label="Action menu"
@@ -176,7 +187,7 @@ export default function Applications() {
             {isMenuOpen && (
               <ActionMenu
                 data={application}
-                onDelete={onDelete}
+                onDeleteClick={() => setOpenDeleteDialog(true)}
                 onVisit={onVisitUrl}
               />
             )}
@@ -392,6 +403,16 @@ export default function Applications() {
             </button>
           </div>
         </div>
+      )}
+      {selectedRowId && openDeleteDialog && (
+        <ConfirmDeleteDialog
+          disabled={deleteMutation.isPending}
+          onDelete={() => onDelete(selectedRowId)}
+          onClose={closeDeleteDialog}
+        >
+          This will permanently delete this bookmark. You can archive this
+          instead of deleting.
+        </ConfirmDeleteDialog>
       )}
     </div>
   );

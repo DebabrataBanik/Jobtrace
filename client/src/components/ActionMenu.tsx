@@ -4,13 +4,13 @@ import { useNavigate } from "react-router";
 
 type ActionMenuProps = {
   data: Application;
-  onDelete: (id: string) => void;
+  onDeleteClick: () => void;
   onVisit: (url: string) => void;
 };
 
 export default function ActionMenu({
   data,
-  onDelete,
+  onDeleteClick,
   onVisit,
 }: ActionMenuProps) {
   const urlPresent = Boolean(data.url);
@@ -38,7 +38,7 @@ export default function ActionMenu({
       </div>
       <div className="p-1">
         <button
-          onClick={() => onDelete(data._id)}
+          onClick={onDeleteClick}
           className="w-full text-error text-left hover:bg-error-subtle p-1 px-2 rounded-md flex items-center gap-2.5"
         >
           <TrashIcon size={14} />
