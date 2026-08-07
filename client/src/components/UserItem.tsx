@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from "lucide-react";
 import UserDropdown from "./UserDropdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "../services/auth.service";
 
@@ -11,10 +11,21 @@ export default function UserItem() {
   });
   const [showUserDropdown, setShowUserDropdown] = useState<boolean>(false);
 
+  useEffect(() => {
+    function closeDropdown() {
+      setShowUserDropdown(false);
+    }
+    document.addEventListener("click", closeDropdown);
+    return () => document.removeEventListener("click", closeDropdown);
+  }, [showUserDropdown]);
+
   return (
     <div className="border-t border-t-border pt-3 mt-auto sticky bottom-4">
       <button
-        onClick={() => setShowUserDropdown((prev) => !prev)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowUserDropdown((prev) => !prev);
+        }}
         className="group w-full flex items-center p-2 gap-2 hover:bg-accent-subtle rounded-sm duration-300"
       >
         <div className="w-8 h-8 rounded-full bg-accent"></div>
